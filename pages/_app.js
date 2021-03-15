@@ -33,7 +33,7 @@ export default function MyApp({ Component, pageProps }) {
         <meta name="title" content="Sentry → Discord" />
         <meta
           name="description"
-          content="Forward Sentry Webhook events to your Discord Webhook"
+          content="Forward Sentry event notifications to your Discord server using Webhooks"
         />
 
         <meta property="og:type" content="website" />
@@ -41,7 +41,7 @@ export default function MyApp({ Component, pageProps }) {
         <meta property="og:title" content="Sentry → Discord" />
         <meta
           property="og:description"
-          content="Forward Sentry Webhook events to your Discord Webhook"
+          content="Forward Sentry event notifications to your Discord server using Webhooks"
         />
         <meta
           property="og:image"
@@ -53,7 +53,7 @@ export default function MyApp({ Component, pageProps }) {
         <meta property="twitter:title" content="Sentry → Discord" />
         <meta
           property="twitter:description"
-          content="Forward Sentry Webhook events to your Discord Webhook"
+          content="Forward Sentry event notifications to your Discord server using Webhooks"
         />
         <meta
           property="twitter:image"
