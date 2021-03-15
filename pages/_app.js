@@ -43,7 +43,10 @@ export default function MyApp({ Component, pageProps }) {
           property="og:description"
           content="Forward Sentry Webhook events to your Discord Webhook"
         />
-        <meta property="og:image" content="/share.png" />
+        <meta
+          property="og:image"
+          content="https://sentrydiscord.dev/share.png"
+        />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://sentrydiscord.dev/" />
@@ -52,7 +55,10 @@ export default function MyApp({ Component, pageProps }) {
           property="twitter:description"
           content="Forward Sentry Webhook events to your Discord Webhook"
         />
-        <meta property="twitter:image" content="/share.png" />
+        <meta
+          property="twitter:image"
+          content="https://sentrydiscord.dev/share.png"
+        />
 
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
