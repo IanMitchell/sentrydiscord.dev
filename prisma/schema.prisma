@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Webhook {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  url       String   @unique
+  createdAt DateTime @default(now())
+  Event     Event[]
+
+  @@index([key])
+  @@index([url])
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  webhook   Webhook  @relation(fields: [webhookId], references: [id])
+  webhookId Int
+  platform  String?
+  createdAt DateTime @default(now())
+}

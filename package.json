@@ -1,0 +1,26 @@
+{
+  "name": "sentrydiscord",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "npx prisma generate && next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@prisma/client": "^2.18.0",
+    "@tailwindcss/forms": "^0.2.1",
+    "discord.js": "^12.5.1",
+    "fathom-client": "^3.0.0",
+    "next": "10.0.8",
+    "next-connect": "^0.10.0",
+    "react": "17.0.1",
+    "react-dom": "17.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.7",
+    "prisma": "^2.18.0",
+    "tailwindcss": "^2.0.3"
+  }
+}
