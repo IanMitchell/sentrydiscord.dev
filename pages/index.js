@@ -253,12 +253,9 @@ export default function Home({ events, webhooks }) {
                   </Question>
 
                   <Question title="Why doesn't the embed include [thing]?">
-                    Unfortunately Senty's{' '}
-                    <QuestionExternalLink href="https://docs.sentry.io/product/integrations/integration-platform/webhooks/">
-                      documented Webhook payload
-                    </QuestionExternalLink>{' '}
-                    is incorrect. I've tried to piece together what I can, but
-                    if I've missed something please open an issue on GitHub!
+                    I've tried to add what I view as useful information, but if
+                    you think I've missed something please open an issue on
+                    GitHub!
                   </Question>
 
                   <Question title="Have a feature request or want to report a bug?">
