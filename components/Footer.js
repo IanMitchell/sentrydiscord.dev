@@ -38,7 +38,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://discord.com/channels/@me/90339695967350784"
+            href="https://discord.com/users/90339695967350784"
             className="text-gray-400 hover:text-gray-500"
           >
             <span className="sr-only">Discord</span>
