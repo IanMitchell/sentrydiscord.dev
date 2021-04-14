@@ -234,11 +234,19 @@ export default function Home({ events, webhooks }) {
               <div className="mt-6 border-t border-indigo-300 border-opacity-25 pt-10">
                 <dl className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
                   <Question title="Do you store the Sentry event?">
-                    We don't log the event payload, but we do keep track of the
-                    platform (language) for the event, when the event was
-                    received, and what webhook received the event. We use this
-                    information to prioritize support for popular languages as
-                    well as to potentially prune unused webhooks.
+                    <p>
+                      We don't store the event payload, but we do keep track of
+                      the platform (language) for the event, when the event was
+                      received, and what webhook received the event. We use this
+                      information to prioritize support for popular languages as
+                      well as to potentially prune unused webhooks.
+                    </p>
+
+                    <p className="mt-4">
+                      Embeds that fail to send are logged for 24 hours to assist
+                      with debugging - this data is only used for fixing bugs
+                      and is not otherwise viewed.
+                    </p>
                   </Question>
 
                   <Question title="Want a native integration?">

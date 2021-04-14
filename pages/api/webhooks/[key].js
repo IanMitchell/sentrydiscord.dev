@@ -2,11 +2,22 @@ import { PrismaClient } from '@prisma/client';
 import nextConnect from 'next-connect';
 import { getPlatform } from '../../../lib/parser';
 import createMessage from '../../../lib/message';
+import logdna from '@logdna/logger';
+
+const log = logdna.createLogger(process.env.LOGDNA, {
+  app: 'Sentry→Discord',
+  level: 'info',
+});
 
 const handler = async (request, response) => {
+  let prisma;
+  let message;
+
   try {
     const { key } = request.query;
-    const prisma = new PrismaClient();
+    log.info(`Recieved event for ${key}`);
+
+    prisma = new PrismaClient();
 
     const webhook = await prisma.webhook.findUnique({
       where: {
@@ -15,6 +26,7 @@ const handler = async (request, response) => {
     });
 
     if (!webhook) {
+      log.warn('No associated webhook found');
       return response.status(404);
     }
 
@@ -22,13 +34,18 @@ const handler = async (request, response) => {
       console.log(request.body);
     }
 
-    const message = createMessage(request.body);
+    message = createMessage(request.body);
+    log.info('Constructed embed');
 
-    fetch(webhook.url, {
+    const result = await fetch(webhook.url, {
       method: 'POST',
       body: JSON.stringify(message),
       headers: { 'Content-Type': 'application/json' },
     });
+
+    if (!result.ok) {
+      throw new Error('Invalid Discord Request');
+    }
 
     await prisma.event.create({
       data: {
@@ -44,7 +61,8 @@ const handler = async (request, response) => {
 
     return response.status(200);
   } catch (error) {
-    console.error(error);
+    log.error(error.message, { meta: { error, message } });
+    await prisma?.$disconnect();
     return response.status(500);
   }
 };
