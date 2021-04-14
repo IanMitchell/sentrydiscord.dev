@@ -47,6 +47,8 @@ const handler = async (request, response) => {
       throw new Error('Invalid Discord Request');
     }
 
+    log.info('Embed sent');
+
     await prisma.event.create({
       data: {
         platform: getPlatform(request.body),
@@ -59,11 +61,12 @@ const handler = async (request, response) => {
     });
     await prisma.$disconnect();
 
-    return response.status(200);
+    log.info('Event created, all done!');
+    response.status(200).json({ success: true });
   } catch (error) {
     log.error(error.message, { meta: { error, message } });
     await prisma?.$disconnect();
-    return response.status(500);
+    response.status(500).json({ success: false });
   }
 };
 
