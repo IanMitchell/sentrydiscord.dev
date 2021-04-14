@@ -62,9 +62,11 @@ const handler = async (request, response) => {
     await prisma.$disconnect();
 
     log.info('Event created, all done!');
+    log.flush();
     response.status(200).json({ success: true });
   } catch (error) {
     log.error(error.message, { meta: { error, message } });
+    log.flush();
     await prisma?.$disconnect();
     response.status(500).json({ success: false });
   }
