@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        blurple: '#7289DA',
+        blurple: '#5865F2',
         sentry: '#FF0F00',
       },
     },
