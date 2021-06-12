@@ -7,7 +7,9 @@ const create = async (request, response) => {
     const { url } = request.body;
 
     // Ensure it's a Discord Webhook
-    if (!url?.startsWith('https://discord.com/api/webhooks/')) {
+    if (!url?.startsWith('https://discord.com/api/webhooks/') &&
+        !url?.startsWith('https://ptb.discord.com/api/webhooks/') &&
+        !url?.startsWith('https://canary.discord.com/api/webhooks/') ) {
       return response
         .status(400)
         .json({ error: 'Please use a Discord webhook URL!' });
