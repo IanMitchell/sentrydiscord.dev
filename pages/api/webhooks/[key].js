@@ -65,9 +65,21 @@ const handler = async (request, response) => {
     log.flush();
     response.status(200).json({ success: true });
   } catch (error) {
-    log.error(error.message, {
-      meta: { error, message, payload: request.body },
-    });
+    let meta = { error };
+
+    if (error.message === 'Invalid Discord Request') {
+      meta = {
+        ...meta,
+        message,
+      };
+    } else {
+      meta = {
+        ...meta,
+        payload: request.body,
+      };
+    }
+
+    log.error(error.message, { meta });
     log.flush();
 
     await prisma?.$disconnect();
