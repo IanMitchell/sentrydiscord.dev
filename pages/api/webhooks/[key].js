@@ -65,9 +65,13 @@ const handler = async (request, response) => {
     log.flush();
     response.status(200).json({ success: true });
   } catch (error) {
-    log.error(error.message, { meta: { error, message } });
+    log.error(error.message, {
+      meta: { error, message, payload: request.body },
+    });
     log.flush();
+
     await prisma?.$disconnect();
+
     response.status(500).json({ success: false });
   }
 };
