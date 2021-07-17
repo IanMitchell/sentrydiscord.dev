@@ -44,7 +44,8 @@ const handler = async (request, response) => {
     });
 
     if (!result.ok) {
-      throw new Error('Invalid Discord Request');
+      const json = await result.json();
+      throw new Error(`Invalid Discord Request: ${JSON.stringify(json)}`);
     }
 
     log.info('Embed sent');
