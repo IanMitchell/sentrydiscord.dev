@@ -43,8 +43,24 @@ const handler = async (request, response) => {
       headers: { 'Content-Type': 'application/json' },
     });
 
-    if (!result.ok) {
+    if (!result.ok && result.status === 429) {
+      log.error('Currently being rate limited. TODO: Handle!');
+      log.flush();
+      await prisma?.$disconnect();
+      response.status(429).json({ success: false });
+      return;
+    } else if (!result.ok) {
       const json = await result.json();
+
+      if (json.code === 10015) {
+        log.error('Found a deleted webhook! TODO: Remove');
+
+        log.flush();
+        await prisma?.$disconnect();
+        response.status(404).json({ success: false });
+        return;
+      }
+
       throw new Error(`Invalid Discord Request: ${JSON.stringify(json)}`);
     }
 
