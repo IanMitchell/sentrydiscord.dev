@@ -26,7 +26,7 @@ const handler = async (request, response) => {
     });
 
     if (!webhook) {
-      log.warn('No associated webhook found');
+      log.warn('No associated webhook found', { meta: { key } });
       return response.status(404);
     }
 
@@ -35,7 +35,7 @@ const handler = async (request, response) => {
     }
 
     message = createMessage(request.body);
-    log.info('Constructed embed');
+    log.info('Constructed embed', { meta: { key } });
 
     const result = await fetch(webhook.url, {
       method: 'POST',
@@ -44,7 +44,9 @@ const handler = async (request, response) => {
     });
 
     if (!result.ok && result.status === 429) {
-      log.error('Currently being rate limited. TODO: Handle!');
+      log.error('Currently being rate limited. TODO: Handle!', {
+        meta: { key },
+      });
       log.flush();
       await prisma?.$disconnect();
       response.status(429).json({ success: false });
@@ -52,24 +54,37 @@ const handler = async (request, response) => {
     } else if (!result.ok) {
       const json = await result.json();
 
-      if (json.code === 10015) {
-        log.warn(`Found a deleted webhook! Removing ${key}`);
-        await prisma.webhook.delete({
-          where: {
-            key,
-          },
-        });
+      switch (json.code) {
+        case 11015: {
+          log.warn(`Found a deleted webhook! Removing ${key}`, {
+            meta: { key },
+          });
+          await prisma.webhook.delete({
+            where: {
+              key,
+            },
+          });
 
-        log.flush();
-        await prisma?.$disconnect();
-        response.status(404).json({ success: false });
-        return;
+          log.flush();
+          await prisma?.$disconnect();
+          response.status(404).json({ success: false });
+          return;
+        }
+        case 50027: {
+          log.error(`Invalid Webhook Token`, {
+            meta: { key, url: webhook.url },
+          });
+          log.flush();
+          await prisma?.$disconnect();
+          response.status(500).json({ success: false });
+          return;
+        }
       }
 
       throw new Error(`Invalid Discord Request: ${JSON.stringify(json)}`);
     }
 
-    log.info('Embed sent');
+    log.info('Embed sent', { meta: { key } });
 
     await prisma.event.create({
       data: {
@@ -83,7 +98,7 @@ const handler = async (request, response) => {
     });
     await prisma.$disconnect();
 
-    log.info('Event created, all done!');
+    log.info('Event created, all done!', { meta: { key } });
     log.flush();
     response.status(200).json({ success: true });
   } catch (error) {
@@ -93,11 +108,13 @@ const handler = async (request, response) => {
       meta = {
         ...meta,
         message,
+        key,
       };
     } else {
       meta = {
         ...meta,
         payload: request.body,
+        key,
       };
     }
 
