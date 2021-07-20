@@ -53,7 +53,12 @@ const handler = async (request, response) => {
       const json = await result.json();
 
       if (json.code === 10015) {
-        log.error('Found a deleted webhook! TODO: Remove');
+        log.warn(`Found a deleted webhook! Removing ${key}`);
+        await prisma.webhook.delete({
+          where: {
+            key,
+          },
+        });
 
         log.flush();
         await prisma?.$disconnect();
