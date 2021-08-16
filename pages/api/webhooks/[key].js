@@ -44,7 +44,7 @@ const handler = async (request, response) => {
     });
 
     if (!result.ok && result.status === 429) {
-      log.error('Currently being rate limited. TODO: Handle!', {
+      log.warn('Currently being rate limited', {
         meta: { key },
       });
       log.flush();
