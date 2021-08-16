@@ -15,7 +15,7 @@ const handler = async (request, response) => {
 
   try {
     const { key } = request.query;
-    log.info(`Recieved event for ${key}`);
+    log.info(`Received event for ${key}`);
 
     prisma = new PrismaClient();
 
