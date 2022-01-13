@@ -119,6 +119,10 @@ const handler = async (request, response) => {
       };
     }
 
+    if (error?.message === 'Unknown Webhook') {
+      log.error(meta);
+    }
+
     log.error(error.message, { meta });
     log.flush();
 
