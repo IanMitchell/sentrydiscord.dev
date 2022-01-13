@@ -15,7 +15,12 @@ const handler = async (request, response) => {
 
   try {
     const { key } = request.query;
-    log.info(`Received event for ${key}`);
+
+    if (process.env.NODE_ENV === 'development' || request.query.debug) {
+      log.info(`Received event for ${key}`, { meta: { body: request.body } });
+    } else {
+      log.info(`Received event for ${key}`);
+    }
 
     prisma = new PrismaClient();
 
@@ -28,10 +33,6 @@ const handler = async (request, response) => {
     if (!webhook) {
       log.warn('No associated webhook found', { meta: { key } });
       return response.status(404);
-    }
-
-    if (process.env.NODE_ENV === 'development') {
-      console.log(request.body);
     }
 
     message = createMessage(request.body);
