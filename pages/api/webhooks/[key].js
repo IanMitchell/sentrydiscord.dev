@@ -104,7 +104,11 @@ const handler = async (request, response) => {
   } catch (error) {
     let meta = { error };
 
-    if (error.message === 'Invalid Discord Request') {
+    if (meta == null) {
+      meta = {};
+    }
+
+    if (error?.message === 'Invalid Discord Request') {
       meta = {
         ...meta,
         message,
