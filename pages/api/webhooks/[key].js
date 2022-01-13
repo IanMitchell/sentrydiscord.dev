@@ -56,7 +56,7 @@ const handler = async (request, response) => {
       const json = await result.json();
 
       switch (json.code) {
-        case 11015: {
+        case 10015: {
           log.warn(`Found a deleted webhook! Removing ${key}`, {
             meta: { key },
           });
@@ -117,10 +117,6 @@ const handler = async (request, response) => {
         payload: request.body,
         key: request.query.key,
       };
-    }
-
-    if (error?.message === 'Unknown Webhook') {
-      log.error(meta);
     }
 
     log.error(error.message, { meta });
