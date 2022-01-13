@@ -105,21 +105,17 @@ const handler = async (request, response) => {
   } catch (error) {
     let meta = { error };
 
-    if (meta == null) {
-      meta = {};
-    }
-
     if (error?.message === 'Invalid Discord Request') {
       meta = {
         ...meta,
         message,
-        key,
+        key: request.query.key,
       };
     } else {
       meta = {
         ...meta,
         payload: request.body,
-        key,
+        key: request.query.key,
       };
     }
 
