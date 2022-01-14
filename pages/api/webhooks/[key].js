@@ -44,15 +44,28 @@ const handler = async (request, response) => {
       headers: { 'Content-Type': 'application/json' },
     });
 
-    if (!result.ok && result.status === 429) {
-      log.warn('Currently being rate limited', {
-        meta: { key },
-      });
-      log.flush();
-      await prisma?.$disconnect();
-      response.status(429).json({ success: false });
-      return;
-    } else if (!result.ok) {
+    if (!result.ok) {
+      switch (result.status) {
+        case 429: {
+          log.warn('Currently being rate limited', {
+            meta: { key },
+          });
+          log.flush();
+          await prisma?.$disconnect();
+          response.status(429).json({ success: false });
+          return;
+        }
+        case 500: {
+          log.warn('Discord API returned a 500 error', {
+            meta: { key },
+          });
+          log.flush();
+          await prisma?.$disconnect();
+          response.status(503).json({ success: false });
+          return;
+        }
+      }
+
       const json = await result.json();
 
       switch (json.code) {
