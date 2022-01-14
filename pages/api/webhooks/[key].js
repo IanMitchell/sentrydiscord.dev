@@ -22,6 +22,12 @@ const handler = async (request, response) => {
       log.info(`Received event for ${key}`);
     }
 
+    if (request.body == null) {
+      log.info(`Empty body received for ${key}`);
+      log.flush();
+      return response.status(400).send({ success: false });
+    }
+
     prisma = new PrismaClient();
 
     const webhook = await prisma.webhook.findUnique({
