@@ -9,6 +9,14 @@ const log = logdna.createLogger(process.env.LOGDNA, {
   level: 'info',
 });
 
+class DiscordRequestError extends Error {
+  constructor(message, body) {
+    super(message);
+    this.name = 'DiscordRequestError';
+    this.body = body;
+  }
+}
+
 const handler = async (request, response) => {
   let prisma;
   let message;
@@ -63,7 +71,7 @@ const handler = async (request, response) => {
         }
         case 500: {
           log.warn('Discord API returned a 500 error', {
-            meta: { key },
+            meta: { key, message },
           });
           log.flush();
           await prisma?.$disconnect();
@@ -101,7 +109,10 @@ const handler = async (request, response) => {
         }
       }
 
-      throw new Error(`Invalid Discord Request: ${JSON.stringify(json)}`);
+      throw new DiscordRequestError(
+        `Invalid Discord Request: ${JSON.stringify(json)}`,
+        message
+      );
     }
 
     log.info('Embed sent', { meta: { key } });
@@ -124,10 +135,11 @@ const handler = async (request, response) => {
   } catch (error) {
     let meta = { error };
 
-    if (error?.message === 'Invalid Discord Request') {
+    if (error instanceof DiscordRequestError) {
       meta = {
         ...meta,
         message,
+        body: error.body,
         key: request.query.key,
       };
     } else {
