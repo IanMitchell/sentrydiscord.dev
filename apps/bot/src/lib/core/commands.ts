@@ -4,7 +4,10 @@ import {
 	SlashCommandSubcommandGroupBuilder,
 } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-import { CommandBuilderDefinition, CommandBuilderSequence } from "../typedefs";
+import {
+	CommandBuilderDefinition,
+	CommandBuilderSequence,
+} from "../../typedefs";
 
 export function getSlashCommandKey(definition: CommandBuilderDefinition) {
 	if (Array.isArray(definition)) {

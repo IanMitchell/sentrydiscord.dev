@@ -8,7 +8,7 @@ import {
 	MessageComponentInteraction,
 	MessageSelectMenu,
 } from "discord.js";
-import { getDirname } from "./lib/files";
+import { getDirname } from "./lib/node/files";
 import {
 	ActionHandler,
 	BotCommand,
@@ -16,20 +16,27 @@ import {
 	CommandBuilderDefinition,
 	CommandModule,
 } from "./typedefs";
-import database from "./lib/database";
+import database from "./lib/core/database";
 import getLogger, { getInteractionMeta } from "./lib/logging";
-import Sentry from "./lib/sentry";
+import Sentry from "./lib/logging/sentry";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
 	getMergedApplicationCommandData,
 	getSerializedCommandInteractionKey,
 	getSlashCommandKey,
-} from "./lib/commands";
+} from "./lib/core/commands";
 import chalk from "chalk";
 import type { PrismaClient } from "@prisma/client";
-import { getException } from "./lib/error";
+import { getException } from "./lib/node/error";
+import { Counter } from "prom-client";
+import Prisma from "@prisma/client";
 
 const log = getLogger("Bot");
+
+const interactionCounter = new Counter({
+	name: "interaction_total",
+	help: "Total Interactions handled",
+});
 
 export class Application extends Client {
 	public readonly database: PrismaClient;
@@ -55,6 +62,9 @@ export class Application extends Client {
 
 		this.on("ready", this.initialize);
 		this.on("interactionCreate", this.handleInteraction);
+		this.on("interactionCreate", () => {
+			interactionCounter.inc();
+		});
 		this.on("error", (error) => {
 			log.fatal(error.message);
 			Sentry.captureException(error);

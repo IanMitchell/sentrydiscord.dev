@@ -18,14 +18,12 @@ model Guild {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  events   Event[]
+  events   StoredEvent[]
   projects Project[]
-
 }
 
 model Project {
-  id Int @id @default(autoincrement())
-
+  id      Int    @id @default(autoincrement())
   guild   Guild  @relation(fields: [guildId], references: [id])
   guildId BigInt
 
@@ -48,14 +46,19 @@ model Tag {
 
   name String @unique
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([projectId])
 }
 
-model Event {
+model StoredEvent {
   id      Int    @id @default(autoincrement())
   guild   Guild  @relation(fields: [guildId], references: [id])
   guildId BigInt
-  event   Json
+
+  event     Json
+  submitted Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

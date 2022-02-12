@@ -2,7 +2,7 @@ import Sentry from "@sentry/node";
 import { CaptureContext } from "@sentry/types";
 import { DMChannel, Interaction, Message } from "discord.js";
 import { Histogram } from "prom-client";
-import { getException } from "./error";
+import { getException } from "../node/error";
 
 const errorHistogram = new Histogram({
 	name: "error_count",

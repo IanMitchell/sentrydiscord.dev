@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-import Sentry from "./src/lib/sentry";
+import Sentry from "./src/lib/logging/sentry";
 import getLogger from "./src/lib/logging/logger";
-import { getException } from "./src/lib/error";
+import { getException } from "./src/lib/node/error";
 
 dotenv.config({ path: "../../../.env" });
 const log = getLogger("Host");

@@ -20,7 +20,7 @@ export default async ({ bot }: CommandArgs) => {
 		log.info("Generating response", getInteractionMeta(interaction));
 		pingCounter.inc();
 		void interaction.reply({
-			content: `🏓pong!`,
+			content: `🏓pong! ${bot.ws.ping}ms`,
 		});
 	});
 };
