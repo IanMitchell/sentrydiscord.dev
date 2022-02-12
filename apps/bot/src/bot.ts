@@ -29,9 +29,8 @@ import chalk from "chalk";
 import type { PrismaClient } from "@prisma/client";
 import { getException } from "./lib/node/error";
 import { Counter } from "prom-client";
-import Prisma from "@prisma/client";
 
-const log = getLogger("Bot");
+const log = getLogger("bot");
 
 const interactionCounter = new Counter({
 	name: "interaction_total",

@@ -4,7 +4,7 @@ import { Counter } from "prom-client";
 import { CommandArgs } from "../typedefs";
 import getLogger, { getInteractionMeta } from "../lib/logging";
 
-const log = getLogger("8ball");
+const log = getLogger("command:ping");
 
 const pingCounter = new Counter({
 	name: "ping_command_total",

@@ -3,17 +3,16 @@ import { register } from "./lib/metrics/grafana";
 import cors from "fastify-cors";
 import getLogger from "./lib/logging";
 import { getException } from "./lib/node/error";
-import { Counter } from "prom-client";
 import shieldRoutes from "./routes/shield-routes";
 import sentryRoutes from "./routes/v1/sentry-routes";
 
 const server = fastify();
 void server.register(cors);
 
-const log = getLogger("Server");
+const log = getLogger("server");
 
 void server.register(shieldRoutes);
-void server.register(sentryRoutes, { prefix: "/api/v1" });
+void server.register(sentryRoutes, { prefix: "/v1" });
 
 server.get("/metrics", async (request, response) => {
 	try {

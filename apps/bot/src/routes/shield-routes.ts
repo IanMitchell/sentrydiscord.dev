@@ -11,8 +11,9 @@ import {
 	getTotalGuildCount,
 	getTotalMemberCount,
 } from "../lib/metrics/discord";
+import { getTotalEventCount } from "../lib/metrics/sentry";
 
-const log = getLogger("Shield Routes");
+const log = getLogger("routes:shields");
 
 export default function shieldRoutes(
 	server: FastifyInstance<
@@ -23,22 +24,24 @@ export default function shieldRoutes(
 	options: FastifyPluginOptions,
 	done: (err?: Error) => void
 ) {
-	server.get("/shield/guilds", async (request, response) => {
+	server.get("/shields/guilds", async (request, response) => {
 		log.info("Shield: Guilds");
 		const value = await getTotalGuildCount();
 		return response.send(createShield("Guilds", value.toLocaleString()));
 	});
 
-	server.get("/shield/users", async (request, response) => {
+	server.get("/shields/users", async (request, response) => {
 		log.info("Shield: Users");
 		const value = await getTotalMemberCount();
 		return response.send(createShield("Users", value.toLocaleString()));
 	});
 
-	// TODO: Implement
-	server.get("/shield/events", async (request, response) =>
-		response.send(createShield("Events Handled", Number(0).toLocaleString()))
-	);
+	server.get("/shield/events", async (request, response) => {
+		const value = await getTotalEventCount();
+		return response.send(
+			createShield("Events Handled", value.toLocaleString())
+		);
+	});
 
 	done();
 }

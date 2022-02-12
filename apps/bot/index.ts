@@ -4,7 +4,7 @@ import getLogger from "./src/lib/logging/logger";
 import { getException } from "./src/lib/node/error";
 
 dotenv.config({ path: "../../../.env" });
-const log = getLogger("Host");
+const log = getLogger("host");
 
 async function initialize() {
 	try {

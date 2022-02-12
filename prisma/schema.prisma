@@ -18,8 +18,22 @@ model Guild {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  events   StoredEvent[]
-  projects Project[]
+  connections Connection[]
+  events      StoredEvent[]
+  projects    Project[]
+}
+
+model Connection {
+  id      Int    @id @default(autoincrement())
+  guild   Guild  @relation(fields: [guildId], references: [id])
+  guildId BigInt
+
+  uuid String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([uuid])
 }
 
 model Project {
@@ -64,6 +78,17 @@ model StoredEvent {
   updatedAt DateTime @updatedAt
 
   @@index([guildId])
+}
+
+model Platform {
+  id       Int    @id @default(autoincrement())
+  platform String @unique
+  count    Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([platform])
 }
 
 // Legacy Models

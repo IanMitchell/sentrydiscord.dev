@@ -12,6 +12,13 @@ import Application from "./bot";
 
 type Bot = typeof Application;
 
+export enum SentryWebhook {
+	Installation,
+	Uninstallation,
+	IssueAlert,
+	MetricAlert,
+}
+
 export type CommandBuilderDefinition =
 	| SlashCommandBuilder
 	| [SlashCommandBuilder]
