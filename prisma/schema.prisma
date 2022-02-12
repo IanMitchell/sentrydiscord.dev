@@ -1,30 +1,81 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
-model Webhook {
-  id        Int      @id @default(autoincrement())
-  key       String   @unique
-  url       String   @unique
-  createdAt DateTime @default(now())
-  Event     Event[]
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
 
-  @@index([key])
-  @@index([url])
+model Guild {
+  id        BigInt   @id
+  debug     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events   Event[]
+  projects Project[]
+
+}
+
+model Project {
+  id Int @id @default(autoincrement())
+
+  guild   Guild  @relation(fields: [guildId], references: [id])
+  guildId BigInt
+
+  message    String?
+  stacktrace Boolean @default(true)
+  filterTags Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tags Tag[]
+
+  @@index([guildId])
+}
+
+model Tag {
+  id        Int     @id @default(autoincrement())
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+
+  name String @unique
+
+  @@index([projectId])
 }
 
 model Event {
-  id        Int      @id @default(autoincrement())
-  webhook   Webhook  @relation(fields: [webhookId], references: [id])
-  webhookId Int
-  platform  String?
+  id      Int    @id @default(autoincrement())
+  guild   Guild  @relation(fields: [guildId], references: [id])
+  guildId BigInt
+  event   Json
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([guildId])
+}
+
+// Legacy Models
+
+// Holdover webhooks from version 1; don't add new records,
+// delete when we hit 0 (maybe not records, but queries over n days)
+// If deleted before 404 check, post one last deprecation notice
+model LegacyWebhook {
+  id  Int    @id @default(autoincrement())
+  key String @unique
+  url String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([url])
 }

@@ -1,0 +1,21 @@
+name: Typecheck
+
+on: [push, pull_request]
+
+jobs:
+  TypeScript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "17"
+      - name: Install
+        run: |
+          npm ci
+      - name: Build
+        run: |
+          npm run build
+      - name: TypeCheck
+        run: |
+          npm run typecheck

@@ -1,34 +1,20 @@
-<h1 align="center">Sentry → Discord</h1>
+# My discord.js Bot Template
 
-<p align="center">
-  <img alt="Event Count" src="https://img.shields.io/endpoint?url=https://sentrydiscord.dev/api/badges/events">
-  <img alt="Webhook Count" src="https://img.shields.io/endpoint?url=https://sentrydiscord.dev/api/badges/webhooks">
-</p>
+This repository is an ongoing project to extract core pieces of the discord.js bots and ecosystems I run into a reusable template. I'll be using it to bootstrap several bots this year.
 
----
+## Usage
 
-Sentry → Discord is a service for forwarding Sentry event notifications to Discord. It acts as a middleman and transforms the webhook payload into a Discord-compatible format.
+**Note**: This project has not been fully vetted, deployed, and configured to be secure yet. I'd caution against using it until the Version 1 release.
 
-You can run your own version of Sentry → Discord or use the free, hosted version at https://sentrydiscord.dev.
+## Work in Progress Features
 
-## Local Development
+- **Message Component Handlers**: There aren't any message component handlers yet. Adding explicit handlers as well as a matcher pattern should happen soon.
+- **Better Sentry Integration**: I haven't read through the [Sentry SDK](https://docs.sentry.io/platforms/node/typescript/) to determine what additional aspects I can tie into.
+- **Grafana Graphs**: The Grafana image works and pulls metrics, but I haven't added default metrics, dashboards, and graphs yet.
 
-To get started in a local environment, you'll need a PostgreSQL instance running locally. Clone the repository and run
+## Unverified Features
 
-    npm install
-    npx prisma migrate dev --preview-feature
-    npx prisma generate
-
-Next, create a `.env` file with
-
-    DATABASE_URL=postgresql://...
-
-Replacing the postgresql string with the URL to your local database. Finally, run
-
-    npm run dev
-
-You should be able to view the website at http://localhost:3000.
-
-## Capturing Webhook Events
-
-If you want to see what the Webhook payload looks like from Sentry, clone and run this website locally, and use a service like [ngrok](https://ngrok.com/) to get a public URL you can use to point Sentry to it. In development mode the console will print out the full Sentry payload.
+- **Sentry**: I haven't verified the Sentry reporting code is accurate or working.
+- **LogDNA**: I haven't verified logs successfully send to LogDNA or verified the meta objects or add size checking to them.
+- **Prisma**: The deployment and migration workflows are untested.
+- **Deployment**: The entire deployment action is untested.

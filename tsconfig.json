@@ -1,0 +1,34 @@
+{
+	"compilerOptions": {
+		// sets the baseUrl to the current folder for if `paths` are ever added.
+		"baseUrl": ".",
+		// emits type declaration files
+		"declaration": true,
+		// allow properly importing commonjs files
+		"esModuleInterop": true,
+		// imports are case sensitive
+		"forceConsistentCasingInFileNames": true,
+		// do not emit any generated code on error
+		"noEmitOnError": true,
+		// output to dist/
+		"outDir": "dist",
+		// pretty error messages
+		"pretty": true,
+		// set the typescript root dir to the project root
+		"rootDir": ".",
+		// ignore typescript errors in dependencies
+		"skipLibCheck": true,
+		// emit source maps
+		"sourceMap": true,
+		// force "use strict"
+		"strict": true,
+
+		"lib": ["es2021"],
+		"module": "esnext",
+		"target": "es2021",
+		"moduleResolution": "node",
+		"resolveJsonModule": true
+	},
+	// ignore node_modules and dist
+	"exclude": ["node_modules", "dist", "prisma"]
+}

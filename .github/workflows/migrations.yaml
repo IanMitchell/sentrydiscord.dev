@@ -1,0 +1,15 @@
+name: Migration Warning
+
+on: [pull_request]
+
+jobs:
+  Warning:
+    name: Unsafe Migration Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ianmitchell/prisma-migration-warning-action@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,80 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  Build:
+    name: Build Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "17"
+      - name: Install
+        run: |
+          npm install
+      - name: Build
+        run: |
+          npm run build
+      - name: Build Docker Image
+        run: |
+          docker build -t $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]'):$(echo $GITHUB_SHA | head -c7) .
+      - name: Publish to Registry
+        run: |
+          docker push ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]'):latest
+
+  Migrate:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "17"
+      - name: Install
+        run: |
+          npm install
+      - name: Apply Database Migrations
+        env:
+          TODO: true
+        run: |
+          npx run db:deploy
+
+  Deploy:
+    name: Digital Ocean
+    needs: Migrate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment Variables
+        env:
+          TODO: true
+        run: |
+          envsubst < $GITHUB_WORKSPACE/config/env.tmpl > $GITHUB_WORKSPACE/.env
+      # - name: Deploy to DigitalOcean
+      #   uses: appleboy/ssh-action@v0.1.4
+      #   with:
+      #     host: ${{ secrets.DIGITALOCEAN_HOST }}
+      #     username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+      #     key: ${{ secrets.DIGITALOCEAN_API_KEY }}
+      #     port: 22
+      #     script: |
+      #       doctl registry login --expiry-seconds 180
+      #       docker pull ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]'):latest
+      #       docker-compose down
+      #       docker-compose up -d
+
+  Notify:
+    runs-on: ubuntu-latest
+    needs: Deploy
+    steps:
+      - uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: Bot has been redeployed
+          # TODO: Update webhook
