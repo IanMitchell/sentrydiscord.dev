@@ -23,17 +23,27 @@ model Guild {
   projects    Project[]
 }
 
+model Install {
+  id           String @id
+  token        String
+  refreshToken String
+
+  connections Connection[]
+}
+
 model Connection {
-  id      Int    @id @default(autoincrement())
-  guild   Guild  @relation(fields: [guildId], references: [id])
-  guildId BigInt
+  id        Int     @id @default(autoincrement())
+  guild     Guild   @relation(fields: [guildId], references: [id])
+  guildId   BigInt
+  install   Install @relation(fields: [installId], references: [id])
+  installId String
 
   uuid String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([uuid])
+  @@index([uuid, guildId, installId])
 }
 
 model Project {
@@ -71,8 +81,9 @@ model StoredEvent {
   guild   Guild  @relation(fields: [guildId], references: [id])
   guildId BigInt
 
-  event     Json
-  submitted Boolean @default(false)
+  event      Json
+  submitted  Boolean  @default(false)
+  successful Boolean?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
