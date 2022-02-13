@@ -19,7 +19,6 @@ model Guild {
   updatedAt DateTime @updatedAt
 
   connections Connection[]
-  events      StoredEvent[]
   projects    Project[]
 }
 
@@ -29,6 +28,7 @@ model Install {
   refreshToken String
 
   connections Connection[]
+  events      StoredEvent[]
 }
 
 model Connection {
@@ -77,9 +77,9 @@ model Tag {
 }
 
 model StoredEvent {
-  id      Int    @id @default(autoincrement())
-  guild   Guild  @relation(fields: [guildId], references: [id])
-  guildId BigInt
+  id        Int     @id @default(autoincrement())
+  install   Install @relation(fields: [installId], references: [id])
+  installId String
 
   event      Json
   submitted  Boolean  @default(false)
@@ -88,7 +88,7 @@ model StoredEvent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([guildId])
+  @@index([installId])
 }
 
 model Platform {
