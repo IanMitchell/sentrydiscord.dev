@@ -14,7 +14,6 @@ datasource db {
 
 model Guild {
   id        BigInt   @id
-  debug     Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -23,9 +22,10 @@ model Guild {
 }
 
 model Install {
-  id           String @id
+  id           String  @id
   token        String
   refreshToken String
+  debug        Boolean @default(false)
 
   connections Connection[]
   events      StoredEvent[]

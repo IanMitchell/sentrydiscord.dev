@@ -1,6 +1,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import {
+	AutocompleteInteraction,
 	Client,
 	CommandInteraction,
 	Interaction,
@@ -39,7 +40,16 @@ const interactionCounter = new Counter({
 
 export class Application extends Client {
 	public readonly database: PrismaClient;
-	public readonly applicationCommands: Map<string, BotCommand>;
+	public readonly applicationCommands: Map<
+		string,
+		BotCommand<CommandInteraction>
+	>;
+
+	public readonly autocompleteHandlers: Map<
+		string,
+		BotCommand<AutocompleteInteraction>
+	>;
+
 	public readonly messageComponents: Map<string, BotComponent>;
 
 	constructor() {
@@ -51,6 +61,7 @@ export class Application extends Client {
 
 		this.database = database;
 		this.applicationCommands = new Map();
+		this.autocompleteHandlers = new Map();
 		this.messageComponents = new Map();
 
 		log.info("Loading Application Commands");
@@ -183,9 +194,24 @@ export class Application extends Client {
 				log.error(error.message, getInteractionMeta(interaction));
 				Sentry.captureException(error);
 			}
-		}
+		} else if (interaction.isAutocomplete()) {
+			const key = getSerializedCommandInteractionKey(interaction);
 
-		// TODO: Handle Autocomplete
+			if (this.autocompleteHandlers.has(key)) {
+				try {
+					this.autocompleteHandlers.get(key)?.handler(interaction);
+				} catch (err: unknown) {
+					const error = getException(err);
+					log.error(error.message, getInteractionMeta(interaction));
+					Sentry.captureException(error);
+				}
+			} else {
+				log.error(
+					`Unknown autocomplete interaction: ${key}`,
+					getInteractionMeta(interaction)
+				);
+			}
+		}
 	}
 
 	onApplicationCommand(
@@ -193,6 +219,16 @@ export class Application extends Client {
 		handler: ActionHandler<CommandInteraction>
 	) {
 		this.applicationCommands.set(getSlashCommandKey(command), {
+			commands: Array.isArray(command) ? command : [command],
+			handler,
+		});
+	}
+
+	onAutocomplete(
+		command: CommandBuilderDefinition,
+		handler: ActionHandler<AutocompleteInteraction>
+	) {
+		this.autocompleteHandlers.set(getSlashCommandKey(command), {
 			commands: Array.isArray(command) ? command : [command],
 			handler,
 		});

@@ -6,7 +6,9 @@ import type {
 } from "fastify";
 import type { Server } from "http";
 import { Counter } from "prom-client";
+import database from "../../lib/core/database";
 import getLogger from "../../lib/logging";
+import { getInstallationId } from "../../lib/parser/webhook";
 
 const log = getLogger("routes:sentry");
 
@@ -42,6 +44,7 @@ export default function sentryRoutes(
 	server.post("/webhook", async (request, response) => {
 		log.info("Receiving Sentry Event");
 
+		const json = request.body as Record<string, any>;
 		let type = request.headers["Sentry-Hook-Resource"] ?? "";
 		if (Array.isArray(type)) {
 			type = type.join("");
@@ -56,11 +59,13 @@ export default function sentryRoutes(
 
 			case "uninstallation": {
 				uninstallationCounter.inc();
-				log.info("Uninstallation request");
-
-				// Remove Installation
-				// If Guild has no other installations, post message with a "leave" button
-
+				const id = getInstallationId(json);
+				log.info(`Uninstallation request for ${id}`);
+				await database.install.delete({
+					where: {
+						id,
+					},
+				});
 				break;
 			}
 

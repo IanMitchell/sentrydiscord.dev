@@ -3,7 +3,7 @@ import {
 	SlashCommandSubcommandBuilder,
 	SlashCommandSubcommandGroupBuilder,
 } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { AutocompleteInteraction, CommandInteraction } from "discord.js";
 import {
 	CommandBuilderDefinition,
 	CommandBuilderSequence,
@@ -18,7 +18,7 @@ export function getSlashCommandKey(definition: CommandBuilderDefinition) {
 }
 
 export function getSerializedCommandInteractionKey(
-	interaction: CommandInteraction
+	interaction: CommandInteraction | AutocompleteInteraction
 ) {
 	const name = interaction.commandName;
 	const group = interaction.options.getSubcommandGroup(false);

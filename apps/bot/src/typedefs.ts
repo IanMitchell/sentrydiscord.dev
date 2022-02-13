@@ -5,6 +5,7 @@ import {
 } from "@discordjs/builders";
 import {
 	CommandInteraction,
+	Interaction,
 	MessageComponent,
 	MessageComponentInteraction,
 } from "discord.js";
@@ -44,9 +45,9 @@ export type CommandArgs = {
 
 export type ActionHandler<T> = (interaction: T) => unknown;
 
-export interface BotCommand {
+export interface BotCommand<T extends Interaction> {
 	commands: CommandBuilderSequence;
-	handler: ActionHandler<CommandInteraction>;
+	handler: ActionHandler<T>;
 }
 
 // export interface BotListener {}
