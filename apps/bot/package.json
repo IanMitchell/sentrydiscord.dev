@@ -30,6 +30,7 @@
 		"dotenv": "^14.3.2",
 		"fastify": "^3.27.0",
 		"fastify-cors": "^6.0.2",
+		"ioredis": "^4.28.5",
 		"node-cache": "^5.1.2",
 		"prom-client": "^14.0.1"
 	}
