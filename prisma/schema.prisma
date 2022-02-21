@@ -13,7 +13,9 @@ datasource db {
 }
 
 model Guild {
-  id        BigInt   @id
+  id     BigInt  @id
+  unfurl Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -37,8 +39,7 @@ model Connection {
   guildId   BigInt
   install   Install @relation(fields: [installId], references: [id])
   installId String
-
-  uuid String
+  uuid      String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -58,7 +59,8 @@ model Project {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tags Tag[]
+  tags   Tag[]
+  events Event[]
 
   @@index([guildId])
 }
@@ -67,12 +69,12 @@ model Tag {
   id        Int     @id @default(autoincrement())
   project   Project @relation(fields: [projectId], references: [id])
   projectId Int
-
-  name String @unique
+  name      String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([projectId, name])
   @@index([projectId])
 }
 
@@ -91,10 +93,11 @@ model StoredEvent {
   @@index([installId])
 }
 
-model Platform {
-  id       Int    @id @default(autoincrement())
-  platform String @unique
-  count    Int    @default(0)
+model Event {
+  id        Int     @id @default(autoincrement())
+  platform  String
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

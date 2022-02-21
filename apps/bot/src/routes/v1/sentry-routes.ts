@@ -6,8 +6,9 @@ import type {
 } from "fastify";
 import type { Server } from "http";
 import { Counter } from "prom-client";
+import handleEvent from "src/handlers/event";
 import database from "../../lib/core/database";
-import getLogger from "../../lib/logging";
+import getLogger from "../../lib/core/logging";
 import { getInstallationId } from "../../lib/parser/webhook";
 
 const log = getLogger("routes:sentry");
@@ -20,6 +21,11 @@ const installationCounter = new Counter({
 const uninstallationCounter = new Counter({
 	name: "total_uninstall_events",
 	help: "Total integration uninstallations",
+});
+
+const eventCounter = new Counter({
+	name: "total_event_alert_events",
+	help: "Total event alert events",
 });
 
 const unsupportedCounter = new Counter({
@@ -71,6 +77,8 @@ export default function sentryRoutes(
 
 			case "event_alert": {
 				log.info("Event Alert");
+				eventCounter.inc();
+				handleEvent(json);
 				break;
 			}
 

@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { Counter } from "prom-client";
 import { CommandArgs } from "../typedefs";
-import getLogger, { getInteractionMeta } from "../lib/logging";
+import getLogger, { getInteractionMeta } from "../lib/core/logging";
 
 const log = getLogger("command:ping");
 
@@ -17,7 +17,10 @@ export const command = new SlashCommandBuilder()
 
 export default async ({ bot }: CommandArgs) => {
 	bot.onApplicationCommand(command, (interaction: CommandInteraction) => {
-		log.info("Generating response", getInteractionMeta(interaction));
+		log.info(
+			`Ping request (${bot.ws.ping}ms)`,
+			getInteractionMeta(interaction)
+		);
 		pingCounter.inc();
 		void interaction.reply({
 			content: `🏓pong! ${bot.ws.ping}ms`,

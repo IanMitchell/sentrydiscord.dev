@@ -5,13 +5,13 @@ import type {
 	RawRequestDefaultExpression,
 } from "fastify";
 import type { Server } from "http";
-import { createShield } from "../lib/metrics/shields";
-import getLogger from "../lib/logging";
+import { createShield } from "../lib/core/metrics/shields";
+import getLogger from "../lib/core/logging";
 import {
 	getTotalGuildCount,
 	getTotalMemberCount,
-} from "../lib/metrics/discord";
-import { getTotalEventCount } from "../lib/metrics/sentry";
+} from "../lib/core/metrics/discord";
+import { getTotalEventCount } from "../lib/core/metrics/sentry";
 
 const log = getLogger("routes:shields");
 

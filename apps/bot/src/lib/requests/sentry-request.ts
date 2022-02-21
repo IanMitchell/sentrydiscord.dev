@@ -5,7 +5,7 @@ export function authorizedFetch() {
 	// Make request. If 401, call refresh token and try again
 }
 
-export function getPaginatedResults() {
+export function withPaginatedResults(fn) {
 	// https://docs.sentry.io/api/pagination/
 }
 
@@ -13,18 +13,18 @@ export function getOrganizations(installationId: string) {
 	// https://docs.sentry.io/api/organizations/list-your-organizations/
 }
 
-export function getOrganizationMembers() {
+export function getOrganizationMembers(slug: string) {
 	// https://docs.sentry.io/api/organizations/list-an-organizations-users/
 }
 
-export function getProjects() {
+export function getProjects(slug: string) {
 	// https://docs.sentry.io/api/organizations/list-an-organizations-projects/
 }
 
-export function getIssue() {
+export function getIssue(issueId: string) {
 	// https://docs.sentry.io/api/events/retrieve-an-issue/
 }
 
-export function updateIssue() {
+export function updateIssue(issueId: string, opts) {
 	// https://docs.sentry.io/api/events/update-an-issue/
 }

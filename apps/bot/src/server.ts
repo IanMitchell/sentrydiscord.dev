@@ -1,8 +1,8 @@
 import fastify from "fastify";
-import { register } from "./lib/metrics/grafana";
+import { register } from "./lib/core/metrics/grafana";
 import cors from "fastify-cors";
-import getLogger from "./lib/logging";
-import { getException } from "./lib/node/error";
+import getLogger from "./lib/core/logging";
+import { getException } from "./lib/core/node/error";
 import shieldRoutes from "./routes/shield-routes";
 import sentryRoutes from "./routes/v1/sentry-routes";
 

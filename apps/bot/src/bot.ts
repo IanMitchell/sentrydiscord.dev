@@ -9,7 +9,7 @@ import {
 	MessageComponentInteraction,
 	MessageSelectMenu,
 } from "discord.js";
-import { getDirname } from "./lib/node/files";
+import { getDirname } from "./lib/core/node/files";
 import {
 	ActionHandler,
 	BotCommand,
@@ -18,8 +18,8 @@ import {
 	CommandModule,
 } from "./typedefs";
 import database from "./lib/core/database";
-import getLogger, { getInteractionMeta } from "./lib/logging";
-import Sentry from "./lib/logging/sentry";
+import getLogger, { getInteractionMeta } from "./lib/core/logging";
+import Sentry from "./lib/core/logging/sentry";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
 	getMergedApplicationCommandData,
@@ -28,7 +28,7 @@ import {
 } from "./lib/core/commands";
 import chalk from "chalk";
 import type { PrismaClient } from "@prisma/client";
-import { getException } from "./lib/node/error";
+import { getException } from "./lib/core/node/error";
 import { Counter } from "prom-client";
 
 const log = getLogger("bot");

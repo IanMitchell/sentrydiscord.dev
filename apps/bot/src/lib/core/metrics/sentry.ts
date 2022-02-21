@@ -1,15 +1,11 @@
 import { getCacheValue } from "./cache";
-import database from "../core/database";
+import database from "../database";
 
 export async function getTotalEventCount() {
 	const value = await getCacheValue<number>("totalEventCount", async () => {
-		const events = await database.platform.aggregate({
-			_sum: {
-				count: true,
-			},
-		});
+		const events = await database.event.count();
 
-		return events._sum.count ?? 0;
+		return events ?? 0;
 	});
 
 	return value;
