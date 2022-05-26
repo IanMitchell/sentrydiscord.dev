@@ -1,8 +1,5 @@
-import {
-	SlashCommandBuilder,
-	SlashCommandSubcommandBuilder,
-} from "@discordjs/builders";
-import { AutocompleteInteraction, CommandInteraction } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction } from "discord.js";
 import { Counter } from "prom-client";
 import { CommandArgs } from "../typedefs";
 import getLogger, { getInteractionMeta } from "../lib/core/logging";
@@ -10,14 +7,14 @@ import getLogger, { getInteractionMeta } from "../lib/core/logging";
 const log = getLogger("command:donate");
 
 const donateCounter = new Counter({
-	name: "debug_on_command_total",
-	help: "Total number of debug on commands ran",
+	name: "donate_command_total",
+	help: "Total number of donate commands ran",
 });
 
 export const command = new SlashCommandBuilder()
 	.setName("donate")
 	.setDescription(
-		"Maintaing and hosting this bot costs money. If you've found it helpful, please donate!"
+		"Maintaining and hosting this bot costs money. If you've found it helpful, please donate!"
 	);
 
 export default async ({ bot }: CommandArgs) => {
@@ -32,7 +29,7 @@ export default async ({ bot }: CommandArgs) => {
 				getInteractionMeta(interaction)
 			);
 			// TODO: Think of the reply message
-			void interaction.reply();
+			void interaction.reply("WIP");
 		}
 	);
 };

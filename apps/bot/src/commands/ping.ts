@@ -13,7 +13,7 @@ const pingCounter = new Counter({
 
 export const command = new SlashCommandBuilder()
 	.setName("ping")
-	.setDescription("If the bot is online, you'll get a pong");
+	.setDescription("If the bot is online, you'll get a pong back");
 
 export default async ({ bot }: CommandArgs) => {
 	bot.onApplicationCommand(command, (interaction: CommandInteraction) => {
@@ -22,6 +22,7 @@ export default async ({ bot }: CommandArgs) => {
 			getInteractionMeta(interaction)
 		);
 		pingCounter.inc();
+
 		void interaction.reply({
 			content: `🏓 Pong! ${bot.ws.ping}ms`,
 		});

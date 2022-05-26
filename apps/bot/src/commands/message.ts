@@ -4,12 +4,12 @@ import { CommandArgs } from "../typedefs";
 
 export const command = new SlashCommandBuilder()
 	.setName("message")
-	.setDescription("TODO");
+	.setDescription("Coming soon!");
 
 export default async ({ bot }: CommandArgs) => {
 	bot.onApplicationCommand(command, (interaction: CommandInteraction) => {
 		void interaction.reply({
-			content: `WIP`,
+			content: `This feature is a work in progress. It will let you set a message to be used when new events are posted (useful for pinging people!)`,
 		});
 	});
 };

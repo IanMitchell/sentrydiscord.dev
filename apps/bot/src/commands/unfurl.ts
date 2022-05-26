@@ -2,7 +2,7 @@ import {
 	SlashCommandBuilder,
 	SlashCommandSubcommandBuilder,
 } from "@discordjs/builders";
-import { AutocompleteInteraction, CommandInteraction } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import { Counter } from "prom-client";
 import { CommandArgs } from "../typedefs";
 import getLogger, { getInteractionMeta } from "../lib/core/logging";
@@ -55,12 +55,14 @@ export default async ({ bot }: CommandArgs) => {
 	bot.onApplicationCommand(
 		[command, subcommandOn],
 		async (interaction: CommandInteraction) => {
+			void interaction.deferReply();
+
 			unfurlOnCounter.inc();
 			log.info(
 				`Turning unfurler on for ${interaction.guild?.id ?? "unknown"}`,
 				getInteractionMeta(interaction)
 			);
-			void interaction.deferReply();
+
 			await setUnfurler(interaction, true);
 			void interaction.reply({
 				content: "Unfurler turned on; I will do X Y Z.",
@@ -71,12 +73,14 @@ export default async ({ bot }: CommandArgs) => {
 	bot.onApplicationCommand(
 		[command, subcommandOff],
 		async (interaction: CommandInteraction) => {
+			void interaction.deferReply();
+
 			unfurlOffCounter.inc();
 			log.info(
 				`Turning unfurler off for ${interaction.guild?.id ?? "unknown"}`,
 				getInteractionMeta(interaction)
 			);
-			void interaction.deferReply();
+
 			await setUnfurler(interaction, false);
 			void interaction.reply({
 				content: "Unfurler turned off. To turn on, do X Y Z",
