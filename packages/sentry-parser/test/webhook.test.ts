@@ -1,4 +1,6 @@
-import { getInstallationId } from "../src/lib/parser/webhook";
+import { describe, test, expect } from "vitest";
+import { getInstallationId } from "../src/webhook";
+
 import installPayload from "./mocks/installations/example.json";
 import uninstallPayload from "./mocks/uninstallations/example.json";
 import issueAlertPayload from "./mocks/issue-alert/example.json";

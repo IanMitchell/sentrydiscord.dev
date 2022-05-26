@@ -1,8 +1,5 @@
-import {
-	getName,
-	isInstall,
-	isUninstall,
-} from "../src/lib/parser/installation";
+import { describe, test, expect } from "vitest";
+import { getName, isInstall, isUninstall } from "../src/installation";
 import install from "./mocks/installations/example.json";
 import uninstall from "./mocks/uninstallations/example.json";
 

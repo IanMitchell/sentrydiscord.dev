@@ -38,7 +38,14 @@ export const subcommandOn = new SlashCommandSubcommandBuilder()
 
 export const subcommandOff = new SlashCommandSubcommandBuilder()
 	.setName("off")
-	.setDescription("Turns debug mode off");
+	.setDescription("Turns debug mode off")
+	.addStringOption((option) =>
+		option
+			.setName("project")
+			.setRequired(false)
+			.setDescription("Turn Debug off for a specific project")
+			.setAutocomplete(true)
+	);
 
 export default async ({ bot }: CommandArgs) => {
 	const setDebug = async (interaction: CommandInteraction, value: boolean) => {

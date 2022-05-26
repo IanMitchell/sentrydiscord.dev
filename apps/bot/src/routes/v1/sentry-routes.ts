@@ -9,7 +9,7 @@ import { Counter } from "prom-client";
 import handleEvent from "src/handlers/event";
 import database from "../../lib/core/database";
 import getLogger from "../../lib/core/logging";
-import { getInstallationId } from "../../lib/parser/webhook";
+import { getInstallationId } from "@ianmitchell/sentry-parser";
 
 const log = getLogger("routes:sentry");
 

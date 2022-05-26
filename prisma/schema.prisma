@@ -55,6 +55,7 @@ model Project {
   message    String?
   stacktrace Boolean @default(true)
   filterTags Boolean @default(false)
+  debug      Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

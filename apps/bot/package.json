@@ -15,10 +15,10 @@
 		"db:deploy": "prisma migrate deploy",
 		"typecheck": "tsc --noEmit",
 		"lint": "eslint . --ext .ts",
-		"test": "jest",
 		"prettier": "prettier . --check"
 	},
 	"dependencies": {
+		"@ianmitchell/sentry-parser": "0.0.1",
 		"@discordjs/builders": "^0.12.0",
 		"@logdna/logger": "^2.6.1",
 		"@prisma/client": "^3.8.1",

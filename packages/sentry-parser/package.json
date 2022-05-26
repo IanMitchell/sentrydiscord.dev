@@ -1,0 +1,27 @@
+{
+	"name": "sentry-parser",
+	"version": "0.0.1",
+	"author": "Ian Mitchell",
+	"homepage": "https://github.com/ianmitchell/sentrydiscord.dev",
+	"description": "A library for parsing Sentry webhook events",
+	"license": "MIT",
+	"exports": "./dist/src/index.js",
+	"main": "./dist/src/index.js",
+	"typings": "dist/src/index.d.ts",
+	"type": "module",
+	"scripts": {
+		"build": "tsc",
+		"clean": "rimraf dist/",
+		"typecheck": "tsc --noEmit",
+		"prettier": "prettier src/**/*.ts --check",
+		"lint": "eslint ./src/**/*.ts",
+		"test": "vitest run"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"engines": {
+		"node": ">=18"
+	}
+}
