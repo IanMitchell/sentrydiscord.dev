@@ -1,9 +1,5 @@
 module.exports = {
 	parser: "@typescript-eslint/parser",
-	parserOptions: {
-		tsconfigRootDir: __dirname,
-		project: ["./apps/*/tsconfig.json", "./packages/*/tsconfig.json"],
-	},
 	env: {
 		node: true,
 	},
@@ -19,10 +15,5 @@ module.exports = {
 		"capitalized-comments": 0,
 		"arrow-body-style": 0,
 		"no-bitwise": 0,
-	},
-	settings: {
-		"import/resolver": {
-			typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
-		},
 	},
 };
