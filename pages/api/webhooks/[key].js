@@ -14,7 +14,7 @@ const handler = async (request, response) => {
   let message;
 
   try {
-    const { key } = request.query;
+    const { key, thread_id } = request.query;
 
     if (process.env.NODE_ENV === 'development' || request.query.debug) {
       log.info(`Received event for ${key}`, { meta: { body: request.body } });
@@ -44,7 +44,7 @@ const handler = async (request, response) => {
     message = createMessage(request.body);
     log.info('Constructed embed', { meta: { key } });
 
-    const result = await fetch(webhook.url, {
+    const result = await fetch(webhook.url + (thread_id ? '?' + new URLSearchParams({thread_id: thread_id}) : ''), {
       method: 'POST',
       body: JSON.stringify(message),
       headers: { 'Content-Type': 'application/json' },
