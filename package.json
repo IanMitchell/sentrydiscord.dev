@@ -10,21 +10,24 @@
     "db:migrate": "npx prisma migrate dev && npx prisma generate",
     "db:deploy": "npx prisma migrate deploy"
   },
+  "engines" : { 
+    "npm" : ">=7.0.0",
+    "node" : "16.0.0"
+  },
   "dependencies": {
     "@logdna/logger": "^2.4.1",
-    "@prisma/client": "^3.3.0",
-    "@tailwindcss/forms": "^0.3.4",
-    "discord.js": "^12.5.3",
-    "fathom-client": "^3.2.0",
-    "next": "12.0.2",
-    "next-connect": "^0.11.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "tailwindcss": "^2.2.19"
+    "@prisma/client": "^4.1.1",
+    "@tailwindcss/forms": "^0.5.1",
+    "discord.js": "^13.9.1",
+    "next": "^12.2.3",
+    "next-connect": "^0.12.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tailwindcss": "^3.1.6"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
     "postcss": "^8.3.11",
-    "prisma": "^3.3.0"
+    "prisma": "^4.1.1"
   }
 }

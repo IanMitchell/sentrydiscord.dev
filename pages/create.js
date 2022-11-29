@@ -1,6 +1,5 @@
 import { Fragment, useState } from 'react';
 import Link from 'next/link';
-import * as Fathom from 'fathom-client';
 import Footer from '../components/Footer';
 import DonationBanner from '../components/DonationBanner';
 import Spinner from '../components/Spinner';
@@ -24,13 +23,12 @@ export default function Create() {
     setValue(event.currentTarget.value);
   };
 
-  const getWebhookURL = () => `https://sentrydiscord.dev/api/webhooks/${key}`;
+  const getWebhookURL = () => `https://sentryio.glitch.me/api/webhooks/${key}`;
 
   const onClick = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
-    Fathom.trackGoal('4DROBFHL');
 
     const response = await fetch('/api/create', {
       method: 'POST',

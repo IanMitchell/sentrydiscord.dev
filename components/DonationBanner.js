@@ -1,9 +1,7 @@
-import * as Fathom from 'fathom-client';
+
 
 export default function DonationBanner() {
-  const onDonationClick = () => {
-    Fathom.trackGoal('PNH5FP3Q');
-  };
+
 
   return (
     <div className="bg-indigo-50">
@@ -15,7 +13,7 @@ export default function DonationBanner() {
         <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
           <div className="inline-flex rounded-md shadow">
             <a
-              onClick={onDonationClick}
+             
               href="https://github.com/sponsors/IanMitchell"
               className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
             >

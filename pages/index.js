@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { PrismaClient } from '@prisma/client';
-import * as Fathom from 'fathom-client';
+
 import Footer from '../components/Footer';
 import Question, { QuestionExternalLink } from '../components/Questions';
 import Stat from '../components/Stat';
@@ -16,7 +16,7 @@ function ExternalLink({ href, children }) {
 
 export default function Home({ events, webhooks }) {
   const onStartClick = () => {
-    Fathom.trackGoal('JS44EPR1');
+    
   };
 
   return (
