@@ -1,8 +1,8 @@
-import { MessageEmbed } from "discord.js";
+import { APIEmbedField, EmbedBuilder } from "discord.js";
 import getColor from "./colors.js";
 import * as parser from "./parser.js";
 
-function cap(str, length) {
+function cap(str: string, length: number) {
   if (str == null || str?.length <= length) {
     return str;
   }
@@ -11,9 +11,12 @@ function cap(str, length) {
 }
 
 export default function createMessage(event) {
-  const embed = new MessageEmbed();
+  const embed = new EmbedBuilder();
 
-  embed.setAuthor("Sentry → Discord", "", "https://sentrydiscord.dev");
+  embed.setAuthor({
+    name: "Sentry → Discord",
+    url: "https://sentrydiscord.dev",
+  });
 
   const projectName = parser.getProject(event);
 
@@ -32,10 +35,10 @@ export default function createMessage(event) {
   }
 
   embed.setTimestamp(parser.getTime(event));
-  embed.setFooter(
-    "Please consider sponsoring us!",
-    "https://sentrydiscord.dev/sponsor.png",
-  );
+  embed.setFooter({
+    text: "Please consider sponsoring us!",
+    iconURL: "https://sentrydiscord.dev/sponsor.png",
+  });
   embed.setColor(getColor(parser.getLevel(event)));
 
   const fileLocation = parser.getFileLocation(event);
@@ -52,44 +55,61 @@ export default function createMessage(event) {
     embed.setDescription("Unable to generate code snippet.");
   }
 
+  const fields: APIEmbedField[] = [];
+
   const location = parser.getErrorLocation(event, 7);
   if (location?.length > 0) {
-    embed.addField("Stack", `\`\`\`${cap(location.join("\n"), 1000)}\n\`\`\``);
+    fields.push({
+      name: "Stack",
+      value: `\`\`\`${cap(location.join("\n"), 1000)}\n\`\`\``,
+    });
   }
 
   const user = parser.getUser(event);
   if (user?.username) {
-    embed.addField(
-      "User",
-      cap(`${user.username} ${user.id ? `(${user.id})` : ""}`, 1024),
-      true
-    );
+    fields.push({
+      name: "User",
+      value: cap(`${user.username} ${user.id ? `(${user.id})` : ""}`, 1024),
+      inline: true,
+    });
   }
 
   const tags = parser.getTags(event);
   if (Object.keys(tags).length > 0) {
-    embed.addField(
-      "Tags",
-      cap(tags.map(([key, value]) => `${key}: ${value}`).join("\n"), 1024),
-      true
-    );
+    fields.push({
+      name: "Tags",
+      value: cap(
+        tags.map(([key, value]) => `${key}: ${value}`).join("\n"),
+        1024
+      ),
+      inline: true,
+    });
   }
 
   const extras = parser.getExtras(event);
   if (extras.length > 0) {
-    embed.addField("Extras", cap(extras.join("\n"), 1024), true);
+    fields.push({
+      name: "Extras",
+      value: cap(extras.join("\n"), 1024),
+      inline: true,
+    });
   }
 
   const contexts = parser.getContexts(event);
   if (contexts.length > 0) {
-    embed.addField("Contexts", cap(contexts.join("\n"), 1024), true);
+    fields.push({
+      name: "Contexts",
+      value: cap(contexts.join("\n"), 1024),
+      inline: true,
+    });
   }
 
   const release = parser.getRelease(event);
   if (release) {
-    embed.addField("Release", cap(release, 1024), true);
+    fields.push({ name: "Release", value: cap(release, 1024), inline: true });
   }
 
+  embed.addFields(fields);
   return {
     username: "Sentry",
     avatar_url: `https://sentrydiscord.dev/icons/sentry.png`,

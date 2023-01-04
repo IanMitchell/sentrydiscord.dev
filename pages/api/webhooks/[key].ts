@@ -2,8 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import nextConnect from "next-connect";
 import { getPlatform } from "../../../lib/parser";
 import createMessage from "../../../lib/message";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-const handler = async (request, response) => {
+const handler = async (request: NextApiRequest, response: NextApiResponse) => {
   let prisma;
   let message;
 
@@ -112,7 +113,7 @@ const handler = async (request, response) => {
     console.info("Event created, all done!", { meta: { key } });
     response.status(200).json({ success: true });
   } catch (error) {
-    let meta = { error };
+    let meta: Record<string, any> = { error };
 
     if (error?.message?.startsWith("Invalid Discord Request")) {
       meta = {
@@ -128,7 +129,8 @@ const handler = async (request, response) => {
       };
     }
 
-    console.error(error.message, { meta });
+    console.error(error.message);
+    console.error(meta);
 
     await prisma?.$disconnect();
 

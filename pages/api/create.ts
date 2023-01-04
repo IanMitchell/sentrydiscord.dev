@@ -1,18 +1,21 @@
-import crypto from 'crypto';
-import { PrismaClient } from '@prisma/client';
-import nextConnect from 'next-connect';
+import crypto from "crypto";
+import { PrismaClient } from "@prisma/client";
+import nextConnect from "next-connect";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-const create = async (request, response) => {
+const create = async (request: NextApiRequest, response: NextApiResponse) => {
   try {
     const { url } = request.body;
 
     // Ensure it's a Discord Webhook
-    if (!url?.startsWith('https://discord.com/api/webhooks/') &&
-        !url?.startsWith('https://ptb.discord.com/api/webhooks/') &&
-        !url?.startsWith('https://canary.discord.com/api/webhooks/') ) {
+    if (
+      !url?.startsWith("https://discord.com/api/webhooks/") &&
+      !url?.startsWith("https://ptb.discord.com/api/webhooks/") &&
+      !url?.startsWith("https://canary.discord.com/api/webhooks/")
+    ) {
       return response
         .status(400)
-        .json({ error: 'Please use a Discord webhook URL!' });
+        .json({ error: "Please use a Discord webhook URL!" });
     }
 
     // Check for duplicates
@@ -31,7 +34,7 @@ const create = async (request, response) => {
     let key = null;
     let record = null;
     do {
-      key = crypto.randomBytes(8).toString('hex');
+      key = crypto.randomBytes(8).toString("hex");
       record = await prisma.webhook.findUnique({
         where: {
           key,
@@ -52,7 +55,7 @@ const create = async (request, response) => {
     console.error(error);
     return response
       .status(500)
-      .json({ error: 'Sorry, something went wrong. Please try again later.' });
+      .json({ error: "Sorry, something went wrong. Please try again later." });
   }
 };
 

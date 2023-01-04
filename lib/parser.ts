@@ -1,30 +1,32 @@
-export function getEvent(issue) {
+type SentryIssue = Record<string, any>;
+
+export function getEvent(issue: SentryIssue) {
   return issue?.event ?? issue?.data?.issue ?? issue;
 }
 
-export function getProject(issue) {
+export function getProject(issue: SentryIssue) {
   return getEvent(issue)?.project?.name;
 }
 
-export function getPlatform(issue) {
+export function getPlatform(issue: SentryIssue) {
   return getEvent(issue)?.platform;
 }
 
-export function getLanguage(issue) {
-  return getEvent(issue)?.location?.split('.')?.slice(-1)?.[0] || '';
+export function getLanguage(issue: SentryIssue) {
+  return getEvent(issue)?.location?.split(".")?.slice(-1)?.[0] || "";
 }
 
-export function getContexts(issue) {
+export function getContexts(issue: SentryIssue) {
   const contexts = getEvent(issue)?.contexts ?? {};
   const values = Object.values(contexts)
-    .map((value) => `${value?.name} ${value?.version}`)
+    .map((value: Record<string, unknown>) => `${value?.name} ${value?.version}`)
     // TODO: Have a better decision tree here
-    .filter((value) => value !== 'undefined undefined');
+    .filter((value) => value !== "undefined undefined");
 
   return values ?? [];
 }
 
-export function getExtras(issue) {
+export function getExtras(issue: SentryIssue) {
   const extras = getEvent(issue)?.extra ?? {};
   const values = Object.entries(extras).map(
     ([key, value]) => `${key}: ${value}`
@@ -33,27 +35,27 @@ export function getExtras(issue) {
   return values ?? [];
 }
 
-export function getLink(issue) {
-  return issue?.url ?? 'https://sentry.io';
+export function getLink(issue: SentryIssue) {
+  return issue?.url ?? "https://sentry.io";
 }
 
-export function getTags(issue) {
+export function getTags(issue: SentryIssue) {
   return getEvent(issue)?.tags ?? [];
 }
 
-export function getLevel(issue) {
+export function getLevel(issue: SentryIssue) {
   return getEvent(issue)?.level;
 }
 
-export function getType(issue) {
+export function getType(issue: SentryIssue) {
   return getEvent(issue)?.type;
 }
 
-export function getTitle(issue) {
-  return getEvent(issue)?.title ?? 'Sentry Event';
+export function getTitle(issue: SentryIssue) {
+  return getEvent(issue)?.title ?? "Sentry Event";
 }
 
-export function getTime(issue) {
+export function getTime(issue: SentryIssue) {
   const event = getEvent(issue);
 
   if (event?.timestamp) {
@@ -71,45 +73,45 @@ export function getTime(issue) {
   return new Date();
 }
 
-export function getRelease(issue) {
+export function getRelease(issue: SentryIssue) {
   return getEvent(issue)?.release;
 }
 
-export function getUser(issue) {
+export function getUser(issue: SentryIssue) {
   return getEvent(issue)?.user;
 }
 
-export function getFileLocation(issue) {
+export function getFileLocation(issue: SentryIssue) {
   return getEvent(issue)?.location;
 }
 
-export function getStacktrace(issue) {
+export function getStacktrace(issue: SentryIssue) {
   return (
     getEvent(issue)?.stacktrace ??
     getEvent(issue)?.exception?.values[0]?.stacktrace
   );
 }
 
-export function getErrorLocation(issue, maxLines = Infinity) {
+export function getErrorLocation(issue: SentryIssue, maxLines = Infinity) {
   const stacktrace = getStacktrace(issue);
   const locations = stacktrace?.frames; /*.reverse();*/
 
   let files = locations?.map(
     (location) =>
-      `${location?.filename}, ${location?.lineno ?? '?'}:${
-        location?.colno ?? '?'
+      `${location?.filename}, ${location?.lineno ?? "?"}:${
+        location?.colno ?? "?"
       }`
   );
 
   if (maxLines < Infinity && files?.length > maxLines) {
     files = files.slice(0, maxLines);
-    files.push('...');
+    files.push("...");
   }
 
   return files;
 }
 
-export function getErrorCodeSnippet(issue) {
+export function getErrorCodeSnippet(issue: SentryIssue) {
   const stacktrace = getStacktrace(issue);
   const location = stacktrace?.frames?.reverse()?.[0];
 
@@ -120,11 +122,11 @@ export function getErrorCodeSnippet(issue) {
 
   // The spaces below are intentional - they help align the code
   // aorund the additional `>` marker
-  return ` ${location.pre_context?.join('\n ') ?? ''}\n>${
+  return ` ${location.pre_context?.join("\n ") ?? ""}\n>${
     location.context_line
-  }\n${location.post_context?.join('\n') ?? ''}`;
+  }\n${location.post_context?.join("\n") ?? ""}`;
 }
 
-export function getMessage(issue) {
+export function getMessage(issue: SentryIssue) {
   return issue?.message;
 }

@@ -1,12 +1,18 @@
-import Link from 'next/link';
-import { PrismaClient } from '@prisma/client';
-import * as Fathom from 'fathom-client';
-import Footer from '../components/Footer';
-import Question, { QuestionExternalLink } from '../components/Questions';
-import Stat from '../components/Stat';
-import DonationBanner from '../components/DonationBanner';
+import Link from "next/link";
+import { PrismaClient } from "@prisma/client";
+import * as Fathom from "fathom-client";
+import Footer from "../components/Footer";
+import Question, { QuestionExternalLink } from "../components/Questions";
+import Stat from "../components/Stat";
+import DonationBanner from "../components/DonationBanner";
 
-function ExternalLink({ href, children }) {
+function ExternalLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   return (
     <a href={href} className="underline text-black">
       {children}
@@ -16,7 +22,7 @@ function ExternalLink({ href, children }) {
 
 export default function Home({ events, webhooks }) {
   const onStartClick = () => {
-    Fathom.trackGoal('JS44EPR1');
+    Fathom.trackGoal("JS44EPR1", 1);
   };
 
   return (
@@ -111,7 +117,7 @@ export default function Home({ events, webhooks }) {
                 </h3>
                 <p className="mt-3 text-lg text-gray-500">
                   This is the default "test notification" sent by Sentry. Want
-                  to see more information? Maybe less?{' '}
+                  to see more information? Maybe less?{" "}
                   <ExternalLink href="https://github.com/ianmitchell/sentrydiscord.dev">
                     Let us know on GitHub!
                   </ExternalLink>
@@ -250,10 +256,10 @@ export default function Home({ events, webhooks }) {
                   </Question>
 
                   <Question title="Want a native integration?">
-                    Me too! There's an{' '}
+                    Me too! There's an{" "}
                     <QuestionExternalLink href="https://github.com/getsentry/sentry/issues/10925">
                       open issue on GitHub
-                    </QuestionExternalLink>{' '}
+                    </QuestionExternalLink>{" "}
                     that you can go and leave reactions on to help get it
                     prioritized. If official support lands, this service will
                     likely stop allowing new registrations but will remain up so
@@ -267,7 +273,7 @@ export default function Home({ events, webhooks }) {
                   </Question>
 
                   <Question title="Have a feature request or want to report a bug?">
-                    Awesome! You can file an issue on the{' '}
+                    Awesome! You can file an issue on the{" "}
                     <QuestionExternalLink href="https://github.com/ianmitchell/sentrydiscord.dev">
                       GitHub repository
                     </QuestionExternalLink>

@@ -11,6 +11,7 @@
     "db:deploy": "npx prisma migrate deploy"
   },
   "dependencies": {
+    "@prisma/client": "^4.8.0",
     "@tailwindcss/forms": "^0.5.3",
     "discord.js": "^14.7.1",
     "fathom-client": "^3.5.0",
@@ -21,8 +22,10 @@
     "tailwindcss": "^3.2.4"
   },
   "devDependencies": {
+    "@types/react": "18.0.26",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.20",
-    "prisma": "^4.8.0"
+    "prisma": "^4.8.0",
+    "typescript": "4.9.4"
   }
 }

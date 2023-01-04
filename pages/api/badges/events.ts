@@ -1,6 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(request, response) {
+export default async function handler(
+  request: NextApiRequest,
+  response: NextApiResponse
+) {
   const prisma = new PrismaClient();
   const eventCount = await prisma.event.count({
     select: {
@@ -11,9 +15,9 @@ export default async function handler(request, response) {
 
   return response.status(200).json({
     schemaVersion: 1,
-    label: 'Events',
+    label: "Events",
     message: eventCount?._all?.toLocaleString() ?? 0,
-    color: 'green',
-    style: 'for-the-badge',
+    color: "green",
+    style: "for-the-badge",
   });
 }
