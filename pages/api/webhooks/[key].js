@@ -1,13 +1,7 @@
-import { PrismaClient } from '@prisma/client';
-import nextConnect from 'next-connect';
-import { getPlatform } from '../../../lib/parser';
-import createMessage from '../../../lib/message';
-import logdna from '@logdna/logger';
-
-const log = logdna.createLogger(process.env.LOGDNA, {
-  app: 'Sentry→Discord',
-  level: 'info',
-});
+import { PrismaClient } from "@prisma/client";
+import nextConnect from "next-connect";
+import { getPlatform } from "../../../lib/parser";
+import createMessage from "../../../lib/message";
 
 const handler = async (request, response) => {
   let prisma;
@@ -16,15 +10,16 @@ const handler = async (request, response) => {
   try {
     const { key } = request.query;
 
-    if (process.env.NODE_ENV === 'development' || request.query.debug) {
-      log.info(`Received event for ${key}`, { meta: { body: request.body } });
+    if (process.env.NODE_ENV === "development" || request.query.debug) {
+      console.log(`Received event for ${key}`, {
+        meta: { body: request.body },
+      });
     } else {
-      log.info(`Received event for ${key}`);
+      console.log(`Received event for ${key}`);
     }
 
     if (request.body == null) {
-      log.info(`Empty body received for ${key}`);
-      log.flush();
+      console.log(`Empty body received for ${key}`);
       return response.status(400).send({ success: false });
     }
 
@@ -37,35 +32,33 @@ const handler = async (request, response) => {
     });
 
     if (!webhook) {
-      log.warn('No associated webhook found', { meta: { key } });
+      console.warn("No associated webhook found", { meta: { key } });
       return response.status(404);
     }
 
     message = createMessage(request.body);
-    log.info('Constructed embed', { meta: { key } });
+    console.log("Constructed embed", { meta: { key } });
 
     const result = await fetch(webhook.url, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(message),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     });
 
     if (!result.ok) {
       switch (result.status) {
         case 429: {
-          log.warn('Currently being rate limited', {
+          console.warn("Currently being rate limited", {
             meta: { key },
           });
-          log.flush();
           await prisma?.$disconnect();
           response.status(429).json({ success: false });
           return;
         }
         case 500: {
-          log.warn('Discord API returned a 500 error', {
+          console.warn("Discord API returned a 500 error", {
             meta: { key },
           });
-          log.flush();
           await prisma?.$disconnect();
           response.status(503).json({ success: false });
           return;
@@ -76,7 +69,7 @@ const handler = async (request, response) => {
 
       switch (json.code) {
         case 10015: {
-          log.warn(`Found a deleted webhook! Removing ${key}`, {
+          console.warn(`Found a deleted webhook! Removing ${key}`, {
             meta: { key },
           });
           await prisma.webhook.delete({
@@ -85,16 +78,14 @@ const handler = async (request, response) => {
             },
           });
 
-          log.flush();
           await prisma?.$disconnect();
           response.status(404).json({ success: false });
           return;
         }
         case 50027: {
-          log.error(`Invalid Webhook Token`, {
+          console.error(`Invalid Webhook Token`, {
             meta: { key, url: webhook.url },
           });
-          log.flush();
           await prisma?.$disconnect();
           response.status(500).json({ success: false });
           return;
@@ -104,7 +95,7 @@ const handler = async (request, response) => {
       throw new Error(`Invalid Discord Request: ${JSON.stringify(json)}`);
     }
 
-    log.info('Embed sent', { meta: { key } });
+    console.info("Embed sent", { meta: { key } });
 
     await prisma.event.create({
       data: {
@@ -118,13 +109,12 @@ const handler = async (request, response) => {
     });
     await prisma.$disconnect();
 
-    log.info('Event created, all done!', { meta: { key } });
-    log.flush();
+    console.info("Event created, all done!", { meta: { key } });
     response.status(200).json({ success: true });
   } catch (error) {
     let meta = { error };
 
-    if (error?.message?.startsWith('Invalid Discord Request')) {
+    if (error?.message?.startsWith("Invalid Discord Request")) {
       meta = {
         ...meta,
         message,
@@ -138,8 +128,7 @@ const handler = async (request, response) => {
       };
     }
 
-    log.error(error.message, { meta });
-    log.flush();
+    console.error(error.message, { meta });
 
     await prisma?.$disconnect();
 
