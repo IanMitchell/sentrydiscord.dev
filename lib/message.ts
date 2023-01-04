@@ -1,6 +1,6 @@
 import { APIEmbedField, EmbedBuilder } from "discord.js";
-import getColor from "./colors.js";
-import * as parser from "./parser.js";
+import getColor from "./colors";
+import * as parser from "./parser";
 
 function cap(str: string, length: number) {
   if (str == null || str?.length <= length) {

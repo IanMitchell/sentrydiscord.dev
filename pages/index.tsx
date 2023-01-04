@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../lib/database";
 import * as Fathom from "fathom-client";
 import Footer from "../components/Footer";
 import Question, { QuestionExternalLink } from "../components/Questions";
@@ -290,8 +290,6 @@ export default function Home({ events, webhooks }) {
 }
 
 export async function getStaticProps() {
-  const prisma = new PrismaClient();
-
   const [eventCount, webhookCount] = await Promise.all([
     prisma.event.count({
       select: {

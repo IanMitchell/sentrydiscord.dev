@@ -1,7 +1,7 @@
 import crypto from "crypto";
-import { PrismaClient } from "@prisma/client";
 import nextConnect from "next-connect";
 import type { NextApiRequest, NextApiResponse } from "next";
+import prisma from "../../lib/database";
 
 const create = async (request: NextApiRequest, response: NextApiResponse) => {
   try {
@@ -19,7 +19,6 @@ const create = async (request: NextApiRequest, response: NextApiResponse) => {
     }
 
     // Check for duplicates
-    const prisma = new PrismaClient();
     const webhook = await prisma.webhook.findUnique({
       where: {
         url,
@@ -48,7 +47,6 @@ const create = async (request: NextApiRequest, response: NextApiResponse) => {
         url: request.body.url,
       },
     });
-    await prisma.$disconnect();
 
     return response.status(200).json({ key: record.key });
   } catch (error) {

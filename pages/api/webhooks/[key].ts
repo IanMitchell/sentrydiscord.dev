@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../lib/database";
 import nextConnect from "next-connect";
 import { getPlatform } from "../../../lib/parser";
 import createMessage from "../../../lib/message";
@@ -12,9 +12,8 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
     const { key } = request.query;
 
     if (process.env.NODE_ENV === "development" || request.query.debug) {
-      console.log(`Received event for ${key}`, {
-        meta: { body: request.body },
-      });
+      console.log(`Received event for ${key}`);
+      console.log({ body: request.body });
     } else {
       console.log(`Received event for ${key}`);
     }
@@ -24,8 +23,6 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
       return response.status(400).send({ success: false });
     }
 
-    prisma = new PrismaClient();
-
     const webhook = await prisma.webhook.findUnique({
       where: {
         key,
@@ -33,12 +30,14 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
     });
 
     if (!webhook) {
-      console.warn("No associated webhook found", { meta: { key } });
+      console.warn("No associated webhook found");
+      console.warn({ key });
       return response.status(404);
     }
 
     message = createMessage(request.body);
-    console.log("Constructed embed", { meta: { key } });
+    console.log("Constructed embed");
+    console.log({ key });
 
     const result = await fetch(webhook.url, {
       method: "POST",
@@ -49,18 +48,14 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
     if (!result.ok) {
       switch (result.status) {
         case 429: {
-          console.warn("Currently being rate limited", {
-            meta: { key },
-          });
-          await prisma?.$disconnect();
+          console.warn("Currently being rate limited");
+          console.warn({ key });
           response.status(429).json({ success: false });
           return;
         }
         case 500: {
-          console.warn("Discord API returned a 500 error", {
-            meta: { key },
-          });
-          await prisma?.$disconnect();
+          console.warn("Discord API returned a 500 error");
+          console.warn({ key });
           response.status(503).json({ success: false });
           return;
         }
@@ -70,8 +65,9 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
 
       switch (json.code) {
         case 10015: {
-          console.warn(`Found a deleted webhook! Removing ${key}`, {
-            meta: { key },
+          console.warn(`Found a deleted webhook! Removing ${key}`);
+          console.warn({
+            key,
           });
           await prisma.webhook.delete({
             where: {
@@ -79,15 +75,15 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
             },
           });
 
-          await prisma?.$disconnect();
           response.status(404).json({ success: false });
           return;
         }
         case 50027: {
-          console.error(`Invalid Webhook Token`, {
-            meta: { key, url: webhook.url },
+          console.error(`Invalid Webhook Token`);
+          console.error({
+            key,
+            url: webhook.url,
           });
-          await prisma?.$disconnect();
           response.status(500).json({ success: false });
           return;
         }
@@ -96,7 +92,7 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
       throw new Error(`Invalid Discord Request: ${JSON.stringify(json)}`);
     }
 
-    console.info("Embed sent", { meta: { key } });
+    console.info(`Embed sent to ${key}`);
 
     await prisma.event.create({
       data: {
@@ -108,9 +104,8 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
         },
       },
     });
-    await prisma.$disconnect();
 
-    console.info("Event created, all done!", { meta: { key } });
+    console.info(`Event created for ${key}, all done!`);
     response.status(200).json({ success: true });
   } catch (error) {
     let meta: Record<string, any> = { error };
@@ -131,8 +126,6 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
 
     console.error(error.message);
     console.error(meta);
-
-    await prisma?.$disconnect();
 
     response.status(500).json({ success: false });
   }
