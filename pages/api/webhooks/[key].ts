@@ -5,11 +5,14 @@ import createMessage from "../../../lib/message";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (request: NextApiRequest, response: NextApiResponse) => {
-  let prisma;
   let message;
 
   try {
-    const { key } = request.query;
+    let { key } = request.query;
+
+    if (Array.isArray(key)) {
+      key = key[0];
+    }
 
     if (process.env.NODE_ENV === "development" || request.query.debug) {
       console.log(`Received event for ${key}`);
