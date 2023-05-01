@@ -5,7 +5,7 @@ export function getEvent(issue: SentryIssue) {
 }
 
 export function getProject(issue: SentryIssue) {
-  return getEvent(issue)?.project?.name;
+  return issue?.project?.project_name ?? getEvent(issue)?.project?.name;
 }
 
 export function getPlatform(issue: SentryIssue) {
