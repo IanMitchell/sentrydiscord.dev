@@ -146,7 +146,7 @@ export default function Create() {
                     <div className="relative">
                       <div className="sm:text-center">
                         <h2 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
-                          {key != null ? "Your" : "Get a"} Sentry Webhook
+                          {key != null ? "Your Sentry Webhook" : "Enter your Discord webhook"}
                         </h2>
                         <p className="mt-4 mx-auto max-w-2xl text-lg text-indigo-200">
                           The only information we store is the event platform
