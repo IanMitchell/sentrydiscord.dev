@@ -87,7 +87,7 @@ export default function Home({ events, webhooks }) {
                 <Link href="/create">
                   <a
                     onClick={onStartClick}
-                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 mx-4 md:mx-0 md:py-4 md:text-lg md:px-10"
+                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
                   >
                     Get started
                   </a>
