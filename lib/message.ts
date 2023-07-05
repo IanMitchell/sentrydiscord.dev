@@ -15,8 +15,9 @@ export default function createMessage(event) {
 
   embed.setAuthor({
     name: "Sentry → Discord",
-    url: "https://sentrydiscord.dev",
-  });
+    iconURL: "https://sentrydiscord.dev/sponsor.png",
+    url: "https://github.com/sponsors/IanMitchell"
+  })
 
   const projectName = parser.getProject(event);
 
@@ -36,8 +37,8 @@ export default function createMessage(event) {
 
   embed.setTimestamp(parser.getTime(event));
   embed.setFooter({
-    text: "Please consider sponsoring us!",
-    iconURL: "https://sentrydiscord.dev/sponsor.png",
+    text: event.project_name,
+    iconURL: "https://sentrydiscord.dev/icons/sentry.png"
   });
   embed.setColor(getColor(parser.getLevel(event)));
 
