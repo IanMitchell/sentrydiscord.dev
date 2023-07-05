@@ -1,20 +1,20 @@
-import prisma from "../../../lib/database";
-import nextConnect from "next-connect";
-import { getPlatform } from "../../../lib/parser";
-import createMessage from "../../../lib/message";
-import type { NextApiRequest, NextApiResponse } from "next";
+import prisma from '../../../lib/database';
+import nextConnect from 'next-connect';
+import { getPlatform } from '../../../lib/parser';
+import createMessage from '../../../lib/message';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (request: NextApiRequest, response: NextApiResponse) => {
   let message;
 
   try {
-    let { key } = request.query;
+    let { key, thread_id: threadId } = request.query;
 
     if (Array.isArray(key)) {
       key = key[0];
     }
 
-    if (process.env.NODE_ENV === "development" || request.query.debug) {
+    if (process.env.NODE_ENV === 'development' || request.query.debug) {
       console.log(`Received event for ${key}`);
       console.log({ body: request.body });
     } else {
@@ -33,31 +33,37 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
     });
 
     if (!webhook) {
-      console.warn("No associated webhook found");
+      console.warn('No associated webhook found');
       console.warn({ key });
       return response.status(404);
     }
 
     message = createMessage(request.body);
-    console.log("Constructed embed");
+    console.log('Constructed embed');
     console.log({ key });
 
-    const result = await fetch(webhook.url, {
-      method: "POST",
+    const url = new URL(webhook.url);
+
+    if (threadId != null) {
+      url.searchParams.set('thread_id', threadId.toString());
+    }
+
+    const result = await fetch(url, {
+      method: 'POST',
       body: JSON.stringify(message),
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
 
     if (!result.ok) {
       switch (result.status) {
         case 429: {
-          console.warn("Currently being rate limited");
+          console.warn('Currently being rate limited');
           console.warn({ key });
           response.status(429).json({ success: false });
           return;
         }
         case 500: {
-          console.warn("Discord API returned a 500 error");
+          console.warn('Discord API returned a 500 error');
           console.warn({ key });
           response.status(503).json({ success: false });
           return;
@@ -113,7 +119,7 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
   } catch (error) {
     let meta: Record<string, any> = { error };
 
-    if (error?.message?.startsWith("Invalid Discord Request")) {
+    if (error?.message?.startsWith('Invalid Discord Request')) {
       meta = {
         ...meta,
         message,
