@@ -11,13 +11,17 @@ function cap(str: string, length: number) {
 }
 
 export default function createMessage(event) {
-  const embed = new EmbedBuilder();
-
-  embed.setAuthor({
-    name: "Sentry → Discord",
-    iconURL: "https://sentrydiscord.dev/sponsor.png",
-    url: "https://github.com/sponsors/IanMitchell",
-  })
+  const embed = new EmbedBuilder()
+    .setColor(getColor(parser.getLevel(event)))
+    .setAuthor({
+      name: event.project_name,
+      iconURL: "https://sentrydiscord.dev/icons/sentry.png",
+    })
+    .setFooter({
+      name: "Please consider sponsoring us!",
+      iconURL: "https://sentrydiscord.dev/sponsor.png",
+    })
+    .setTimestamp(parser.getTime(event))
 
   const projectName = parser.getProject(event);
 
@@ -34,13 +38,6 @@ export default function createMessage(event) {
   if (link.startsWith("https://") || link.startsWith("http://")) {
     embed.setURL(parser.getLink(event));
   }
-
-  embed.setTimestamp(parser.getTime(event));
-  embed.setFooter({
-    text: event.project_name,
-    iconURL: "https://sentrydiscord.dev/icons/sentry.png",
-  });
-  embed.setColor(getColor(parser.getLevel(event)));
 
   const fileLocation = parser.getFileLocation(event);
   const snippet = cap(parser.getErrorCodeSnippet(event), 3900);
