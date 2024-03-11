@@ -7,6 +7,10 @@
 
 ---
 
+**Note: There was an incident on February 28 which unfortunately resulted in the loss of the production database. The previous data is not recoverable.** I sincerely apologize. You will need to revisit the website and setup your webhooks again.
+
+---
+
 Sentry → Discord is a service for forwarding Sentry event notifications to Discord. It acts as a middleman and transforms the webhook payload into a Discord-compatible format.
 
 You can run your own version of Sentry → Discord or use the free, hosted version at https://sentrydiscord.dev.
