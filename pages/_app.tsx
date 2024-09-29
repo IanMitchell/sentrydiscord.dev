@@ -10,10 +10,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     // Initialize Fathom when the app loads
-    Fathom.load("EJVBCWAV", {
-      includedDomains: ["{siteUrl}"],
-      url: "https://owl.sentrydiscord.dev/script.js",
-    });
+    // Fathom.load("EJVBCWAV", {
+    //   includedDomains: ["{siteUrl}"],
+    //   url: "https://owl.sentrydiscord.dev/script.js",
+    // });
 
     function onRouteChangeComplete() {
       Fathom.trackPageview();

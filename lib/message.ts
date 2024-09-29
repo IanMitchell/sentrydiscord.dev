@@ -17,10 +17,6 @@ export default function createMessage(event) {
 			name: event.project_name,
 			iconURL: "{siteUrl}/icons/sentry.png",
 		})
-		.setFooter({
-			text: "Please consider sponsoring us!",
-			iconURL: "{siteUrl}/sponsor.png",
-		})
 		.setTimestamp(parser.getTime(event));
 
 	const projectName = parser.getProject(event);

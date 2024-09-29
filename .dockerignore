@@ -6,3 +6,5 @@ Dockerfile
 .DS_Store
 Makefile
 README.md
+.dockerignore
+.gitattributes
