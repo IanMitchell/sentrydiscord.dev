@@ -50,10 +50,10 @@ jobs:
 
       - name: Install Docker
         run: |
-          sudo apt update
-          sudo apt install -y docker.io
-          sudo systemctl start docker
-          sudo systemctl enable docker
+          apt update
+          apt install -y docker.io
+          systemctl start docker
+          systemctl enable docker
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
