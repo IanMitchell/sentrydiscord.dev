@@ -15,11 +15,11 @@ export default function createMessage(event) {
 		.setColor(getColor(parser.getLevel(event)))
 		.setAuthor({
 			name: event.project_name,
-			iconURL: "https://sentrydiscord.dev/icons/sentry.png",
+			iconURL: "{siteUrl}/icons/sentry.png",
 		})
 		.setFooter({
 			text: "Please consider sponsoring us!",
-			iconURL: "https://sentrydiscord.dev/sponsor.png",
+			iconURL: "{siteUrl}/sponsor.png",
 		})
 		.setTimestamp(parser.getTime(event));
 
@@ -110,7 +110,7 @@ export default function createMessage(event) {
 	embed.addFields(fields);
 	return {
 		username: "Sentry",
-		avatar_url: `https://sentrydiscord.dev/icons/sentry.png`,
+		avatar_url: `{siteUrl}/icons/sentry.png`,
 		embeds: [embed.toJSON()],
 	};
 }

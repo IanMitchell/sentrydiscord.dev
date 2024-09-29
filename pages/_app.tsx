@@ -11,7 +11,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     // Initialize Fathom when the app loads
     Fathom.load("EJVBCWAV", {
-      includedDomains: ["${process.env.NEXT_PUBLIC_WEBHOOK_HOST || "localhost"}:${process.env.NEXT_PUBLIC_WEBHOOK_PORT || "80"}"],
+      includedDomains: ["{siteUrl}"],
       url: "https://owl.sentrydiscord.dev/script.js",
     });
 
@@ -38,7 +38,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         />
 
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://sentrydiscord.dev/" />
+        <meta property="og:url" content="{siteUrl}/" />
         <meta property="og:title" content="Sentry → Discord" />
         <meta
           property="og:description"
@@ -46,7 +46,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         />
         <meta
           property="og:image"
-          content="https://sentrydiscord.dev/share.png"
+          content="{siteUrl}/share.png"
         />
 
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
