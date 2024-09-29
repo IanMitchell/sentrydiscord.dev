@@ -13,7 +13,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    container: node:18-alpine
+    container: node:18
 
     services:
       postgres:
