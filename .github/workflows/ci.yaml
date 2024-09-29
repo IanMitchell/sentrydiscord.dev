@@ -34,9 +34,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          docker exec -i $(docker ps -q -l) psql -U sentrydiscord -d sentrydiscord -c 'SELECT 1'
+      # - name: Wait for PostgreSQL to be ready
+      #   run: |
+      #     docker exec -i $(docker ps -q -l) psql -U sentrydiscord -d sentrydiscord -c 'SELECT 1'
 
       # For more information, see https://docs.npmjs.com/cli/ci.html
       - name: Install dependencies
