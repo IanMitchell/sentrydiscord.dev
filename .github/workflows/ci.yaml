@@ -7,11 +7,12 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: node:18-alpine
 
     services:
       postgres:
@@ -35,6 +36,13 @@ jobs:
       - name: Wait for PostgreSQL to be ready
         run: |
           docker exec -i $(docker ps -q -l) psql -U sentrydiscord -d sentrydiscord -c 'SELECT 1'
+
+      # For more information, see https://docs.npmjs.com/cli/ci.html
+      - name: Install dependencies
+        run: npm ci
+
+      - name: build
+        run: npx browserslist@latest --update-db && npm run build
 
       - name: Docker build
         run: docker build . --tag ${{ secrets.DOCKERHUB_USERNAME }}/sentrydiscord:latest
