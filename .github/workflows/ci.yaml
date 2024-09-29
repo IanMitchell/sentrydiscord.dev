@@ -13,7 +13,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    container: node:18
+    # container: node:18
 
     services:
       postgres:
@@ -39,19 +39,19 @@ jobs:
       #     docker exec -i $(docker ps -q -l) psql -U sentrydiscord -d sentrydiscord -c 'SELECT 1'
 
       # For more information, see https://docs.npmjs.com/cli/ci.html
-      - name: Install dependencies
-        run: npm i
+      # - name: Install dependencies
+      #   run: npm i
 
-      - name: Create schema db
-        run: npx prisma migrate deploy
+      # - name: Create schema db
+      #   run: npx prisma migrate deploy
 
-      - name: build
-        run: npx browserslist@latest --update-db && npm run build
+      # - name: build
+      #   run: npx browserslist@latest --update-db && npm run build
 
-      - name: Install Docker
-        run: |
-          apt update
-          apt install -y docker.io
+      # - name: Install Docker
+      #   run: |
+      #     apt update
+      #     apt install -y docker.io
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

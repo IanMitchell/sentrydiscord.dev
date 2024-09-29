@@ -4,10 +4,10 @@ WORKDIR /app
 
 COPY . .
 
-# RUN npm install
+RUN npm install
 
-# RUN npx browserslist@latest --update-db \
-#     && npm run build
+RUN npx browserslist@latest --update-db \
+    && npm run build
 
 EXPOSE 3000
 
