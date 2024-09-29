@@ -6,6 +6,8 @@ COPY . .
 
 RUN npm install
 
+RUN npx prisma migrate deploy
+
 RUN npx browserslist@latest --update-db \
     && npm run build
 
