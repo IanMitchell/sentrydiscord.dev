@@ -11,7 +11,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     // Initialize Fathom when the app loads
     Fathom.load("EJVBCWAV", {
-      includedDomains: ["sentrydiscord.dev"],
+      includedDomains: ["${process.env.NEXT_PUBLIC_WEBHOOK_HOST || "localhost"}:${process.env.NEXT_PUBLIC_WEBHOOK_PORT || "80"}"],
       url: "https://owl.sentrydiscord.dev/script.js",
     });
 
@@ -46,18 +46,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         />
         <meta
           property="og:image"
-          content="https://sentrydiscord.dev/share.png"
-        />
-
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://sentrydiscord.dev/" />
-        <meta property="twitter:title" content="Sentry → Discord" />
-        <meta
-          property="twitter:description"
-          content="Forward Sentry event notifications to your Discord server using Webhooks"
-        />
-        <meta
-          property="twitter:image"
           content="https://sentrydiscord.dev/share.png"
         />
 

@@ -1,0 +1,8 @@
+.github
+Dockerfile
+.git
+.vscode
+.gitignore
+.DS_Store
+Makefile
+README.md

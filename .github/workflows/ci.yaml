@@ -1,0 +1,46 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: sentrydiscord
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: sentrydiscord
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U sentrydiscord sentrydiscord"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          docker exec -i $(docker ps -q -l) psql -U sentrydiscord -d sentrydiscord -c 'SELECT 1'
+
+      - name: Docker build
+        run: docker build . --tag ${{ secrets.DOCKERHUB_USERNAME }}/sentrydiscord:latest
+
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/sentrydiscord:latest
