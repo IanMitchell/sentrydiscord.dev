@@ -12,7 +12,8 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: node:18-alpine
+    runs-on: ubuntu-latest
+    container: node:18-alpine
 
     services:
       postgres:
