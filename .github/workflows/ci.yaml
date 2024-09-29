@@ -48,6 +48,9 @@ jobs:
       - name: build
         run: npx browserslist@latest --update-db && npm run build
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Docker build
         run: docker build . --tag ${{ secrets.DOCKERHUB_USERNAME }}/sentrydiscord:latest
 
