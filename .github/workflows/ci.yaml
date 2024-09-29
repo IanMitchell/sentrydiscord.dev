@@ -42,6 +42,9 @@ jobs:
       - name: Install dependencies
         run: npm i
 
+      - name: Create schema db
+        run: npx prisma migrate deploy
+
       - name: build
         run: npx browserslist@latest --update-db && npm run build
 
