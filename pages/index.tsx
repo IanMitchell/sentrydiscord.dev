@@ -319,7 +319,7 @@ export async function getStaticProps() {
 			webhooks: webhookCount?._all ?? 0,
 		},
 	};
-	const siteUrl = process.env.NEXT_PUBLIC_WEBHOOK_URL;
+	const siteUrl = process.env.WEBHOOK_URL;
 
 	return {
 		props: {

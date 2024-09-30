@@ -29,7 +29,7 @@ export default function Create() {
     setValue(event.currentTarget.value);
   };
 
-  const getWebhookURL = () => `${process.env.NEXT_PUBLIC_WEBHOOK_HOST || "localhost"}:${process.env.NEXT_PUBLIC_WEBHOOK_PORT || "80"}/api/webhooks/${key}`;
+  const getWebhookURL = () => `${process.env.WEBHOOK_HOST || "localhost"}:${process.env.WEBHOOK_PORT || "80"}/api/webhooks/${key}`;
 
   const onClick = async (event) => {
     event.preventDefault();
