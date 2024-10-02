@@ -1,6 +1,12 @@
 import { APIEmbedField, EmbedBuilder } from "discord.js";
 import getColor from "./colors";
 import * as parser from "./parser";
+import dotenv from "dotenv";
+
+dotenv.config(); // Загружаем переменные окружения
+
+const NEXT_PUBLIC_WEBHOOK_HOST = process.env.NEXT_PUBLIC_WEBHOOK_HOST;
+const NEXT_PUBLIC_WEBHOOK_PORT = process.env.NEXT_PUBLIC_WEBHOOK_PORT;
 
 function cap(str: string, length: number) {
 	if (str == null || str?.length <= length) {
@@ -15,7 +21,11 @@ export default function createMessage(event) {
 		.setColor(getColor(parser.getLevel(event)))
 		.setAuthor({
 			name: event.project_name,
-			iconURL: "{siteUrl}/icons/sentry.png",
+			iconURL: `${NEXT_PUBLIC_WEBHOOK_HOST}:${NEXT_PUBLIC_WEBHOOK_PORT}/icons/sentry.png`,
+		})
+		.setFooter({
+			text: "Please consider sponsoring us!",
+			iconURL: `${NEXT_PUBLIC_WEBHOOK_HOST}:${NEXT_PUBLIC_WEBHOOK_PORT}/sponsor.png`,
 		})
 		.setTimestamp(parser.getTime(event));
 
@@ -106,7 +116,7 @@ export default function createMessage(event) {
 	embed.addFields(fields);
 	return {
 		username: "Sentry",
-		avatar_url: `{siteUrl}/icons/sentry.png`,
+		avatar_url: `${NEXT_PUBLIC_WEBHOOK_HOST}:${NEXT_PUBLIC_WEBHOOK_PORT}/icons/sentry.png`,
 		embeds: [embed.toJSON()],
 	};
 }
