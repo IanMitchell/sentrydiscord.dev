@@ -21,12 +21,12 @@ services:
     volumes:
       - sentrydiscord_db_data:/var/lib/postgresql/data
 
-  cloudflared:
-    depends_on:
-      - app
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared
-    command: tunnel --no-autoupdate run --token eyJhIjoiNjBkYmViODJkODU3ODc0YjM4Y2E0OWNiYTQ1Y2Y3NDYiLCJ0IjoiNjEwNWQwMjUtMDA1Mi00YTlmLTg4NDctMGRjM2IwMWYxMzRkIiwicyI6IllUbG1NekUxWVRrdFpEUXpZUzAwWlRCbExXSTNNakV0TTJFNU1qaG1NMk0wT0dFeSJ9
+  #cloudflared:
+  #  depends_on:
+  #    - app
+  #  image: cloudflare/cloudflared:latest
+  #  container_name: cloudflared
+  #  command: tunnel --no-autoupdate run --token <TOKEN>
 
 volumes:
   sentrydiscord_db_data:
