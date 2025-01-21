@@ -4,12 +4,17 @@ services:
     container_name: app
     hostname: app
     restart: unless-stopped
-    ports:
-      - "3000:3000" # Can be removed if you are using a reverse proxy in the same network
     environment:
       - DATABASE_URL=postgresql://sentrydiscord:sentrydiscord@db:5432/sentrydiscord
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/badges/events"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:15
@@ -17,18 +22,34 @@ services:
     hostname: db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: sentrydiscord
-      POSTGRES_USER: sentrydiscord
-      POSTGRES_PASSWORD: sentrydiscord
+      - POSTGRES_DB=sentrydiscord
+      - POSTGRES_USER=sentrydiscord
+      - POSTGRES_PASSWORD=sentrydiscord
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sentrydiscord -d sentrydiscord"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   #cloudflared:
   #  image: cloudflare/cloudflared:latest
   #  container_name: cloudflared
-  #  command: tunnel --no-autoupdate run --token <TOKEN>
+  #  environment:
+  #    - TUNNEL_TOKEN=<YOUR_TUNNEL_TOKEN>
+  #    - TUNNEL_METRICS=0.0.0.0:60123
+  #  command: tunnel --no-autoupdate run
+  #  healthcheck:
+  #    test: ["CMD-SHELL", "cloudflared tunnel --metrics localhost:60123 ready"]
+  #    interval: 30s
+  #    timeout: 5s
+  #    retries: 3
+  #    start_period: 10s
   #  depends_on:
-  #    - app
+  #    app:
+  #      condition: service_healthy
 
 volumes:
   db_data:
