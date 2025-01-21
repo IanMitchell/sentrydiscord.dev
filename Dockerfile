@@ -4,10 +4,14 @@ WORKDIR /app
 
 COPY . .
 
-RUN chmod +x docker-entrypoint.sh
-
+RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list.d/stretch.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends postgresql-client libssl1.1 && \
+    apt-get clean && \
+    rm -f /etc/apt/sources.list.d/stretch.list && \
+    rm -rf /var/lib/apt/lists/* && \
+    chmod +x docker-entrypoint.sh
 RUN npm install
-RUN apt update && apt install -y postgresql-client
 
 EXPOSE 3000
 
