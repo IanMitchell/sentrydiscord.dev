@@ -27,12 +27,16 @@ jobs:
 
     - name: Build and Push Docker Image
       run: |
+        REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+        REPO_NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+        IMAGE_NAME="ghcr.io/$REPO_OWNER/$REPO_NAME"
+        
         docker buildx build \
           --no-cache \
           --compress \
           --platform linux/amd64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x \
           --file Dockerfile \
-          --tag ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest \
-          --tag ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:$(date +%s) \
+          --tag $IMAGE_NAME:latest \
+          --tag $IMAGE_NAME:$(date +%s) \
           --push .
-
+      shell: bash
