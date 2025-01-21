@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
 
@@ -7,13 +7,7 @@ COPY . .
 RUN chmod +x docker-entrypoint.sh
 
 RUN npm install
-RUN apk add --no-cache \
-    bash \
-    curl \
-    postgresql-client \
-    openssl3 \
-    openssl3-dev \
-    && npm install -g npm@latest
+RUN apt update && apt install -y postgresql-client
 
 EXPOSE 3000
 
