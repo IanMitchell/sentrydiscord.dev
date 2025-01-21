@@ -4,7 +4,7 @@
   <img alt="Event Count" src="https://img.shields.io/endpoint?url=https://sentrydiscord.dev/api/badges/events">
   <img alt="Webhook Count" src="https://img.shields.io/endpoint?url=https://sentrydiscord.dev/api/badges/webhooks">
   </br>
-  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Serpensin/sentrydiscord.dev/docker-image.yml?style=flat-square&label=Action&cacheSeconds=30">
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Serpensin/sentrydiscord.dev/docker-image.yml?style=flat-square&cacheSeconds=30">
 </p>
 
 ---

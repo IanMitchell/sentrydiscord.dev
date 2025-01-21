@@ -1,10 +1,11 @@
 services:
   app:
-    image: serpensin/sentrydiscord:latest
+    image: ghcr.io/serpensin/sentrydiscord.dev:latest
     container_name: app
     hostname: app
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3000:3000" # Can be removed if you are using a reverse proxy in the same network
     environment:
       - DATABASE_URL=postgresql://sentrydiscord:sentrydiscord@db:5432/sentrydiscord
     depends_on:
@@ -14,21 +15,21 @@ services:
     image: postgres:15
     container_name: db
     hostname: db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: sentrydiscord
       POSTGRES_USER: sentrydiscord
       POSTGRES_PASSWORD: sentrydiscord
     volumes:
-      - sentrydiscord_db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
 
   #cloudflared:
-  #  depends_on:
-  #    - app
   #  image: cloudflare/cloudflared:latest
   #  container_name: cloudflared
   #  command: tunnel --no-autoupdate run --token <TOKEN>
+  #  depends_on:
+  #    - app
 
 volumes:
-  sentrydiscord_db_data:
+  db_data:
     driver: local
-
