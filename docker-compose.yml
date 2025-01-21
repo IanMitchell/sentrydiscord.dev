@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/serpensin/sentrydiscord.dev:latest
+    image: ghcr.io/ianmitchell/sentrydiscord.dev:latest
     container_name: app
     hostname: app
     restart: unless-stopped
