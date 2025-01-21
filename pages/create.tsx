@@ -30,7 +30,10 @@ export default function Create() {
     setValue(event.currentTarget.value);
   };
 
-  const getWebhookURL = () => `https://sentrydiscord.dev/api/webhooks/${key}`;
+  const getWebhookURL = () => {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/api/webhooks/${key}`;
+  };
 
   const onClick = async (event) => {
     event.preventDefault();

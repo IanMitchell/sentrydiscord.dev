@@ -1,0 +1,34 @@
+services:
+  app:
+    image: serpensin/sentrydiscord:latest
+    container_name: app
+    hostname: app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://sentrydiscord:sentrydiscord@db:5432/sentrydiscord
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: db
+    hostname: db
+    environment:
+      POSTGRES_DB: sentrydiscord
+      POSTGRES_USER: sentrydiscord
+      POSTGRES_PASSWORD: sentrydiscord
+    volumes:
+      - sentrydiscord_db_data:/var/lib/postgresql/data
+
+  cloudflared:
+    depends_on:
+      - app
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run --token eyJhIjoiNjBkYmViODJkODU3ODc0YjM4Y2E0OWNiYTQ1Y2Y3NDYiLCJ0IjoiNjEwNWQwMjUtMDA1Mi00YTlmLTg4NDctMGRjM2IwMWYxMzRkIiwicyI6IllUbG1NekUxWVRrdFpEUXpZUzAwWlRCbExXSTNNakV0TTJFNU1qaG1NMk0wT0dFeSJ9
+
+volumes:
+  sentrydiscord_db_data:
+    driver: local
+
