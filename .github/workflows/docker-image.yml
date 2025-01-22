@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [linux/386, linux/amd64]
+        platform: [linux/amd64]
 
     steps:
     - name: Checkout Code
