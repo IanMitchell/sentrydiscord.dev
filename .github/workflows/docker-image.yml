@@ -95,7 +95,6 @@ jobs:
         IMAGE_NAME="ghcr.io/$REPO_OWNER/$REPO_NAME"
         docker buildx imagetools create \
           --tag $IMAGE_NAME:latest \
-          $IMAGE_NAME:latest-linux-386 \
           $IMAGE_NAME:latest-linux-amd64 \
           $IMAGE_NAME:latest-linux-arm-v7 \
           $IMAGE_NAME:latest-linux-arm64-v8
