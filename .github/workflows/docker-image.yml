@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [linux/386, linux/amd64]
+        platform: [linux/amd64]
 
     steps:
     - name: Checkout Code
@@ -95,7 +95,6 @@ jobs:
         IMAGE_NAME="ghcr.io/$REPO_OWNER/$REPO_NAME"
         docker buildx imagetools create \
           --tag $IMAGE_NAME:latest \
-          $IMAGE_NAME:latest-linux-386 \
           $IMAGE_NAME:latest-linux-amd64 \
           $IMAGE_NAME:latest-linux-arm-v7 \
           $IMAGE_NAME:latest-linux-arm64-v8
