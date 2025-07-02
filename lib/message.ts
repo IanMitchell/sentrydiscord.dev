@@ -11,12 +11,13 @@ function cap(str: string, length: number) {
 	return str.substr(0, length - 1) + "\u2026";
 }
 
-export function createMessage(event) {
+export function createMessage(requestBody) {
     console.debug("Received new event");
+
+    const event = parser.getEvent(requestBody);
 
     console.debug({
         event: parser.getEvent(event),
-        project: parser.getProject(event),
         platform: parser.getPlatform(event),
         language: parser.getLanguage(event),
         contexts: parser.getContexts(event),
@@ -36,10 +37,12 @@ export function createMessage(event) {
         message: parser.getMessage(event),
     });
 
+    const eventLevel = parser.getLevel(event);
+
 	const embed = new EmbedBuilder()
-		.setColor(getColor(parser.getLevel(event)))
+		.setColor(getColor(eventLevel))
 		.setAuthor({
-			name: event.data.triggered_rule,
+			name: requestBody.triggered_rule ?? "Sentry Event",
 			iconURL: "https://sentrydiscord.dev/icons/sentry.png",
 		})
 		.setFooter({
@@ -48,16 +51,7 @@ export function createMessage(event) {
 		})
 		.setTimestamp(parser.getTime(event));
 
-	const projectName = parser.getProject(event);
-
-	const eventTitle = parser.getTitle(event);
-
-	if (projectName) {
-		const embedTitle = `[${projectName}] ${eventTitle}`;
-		embed.setTitle(cap(embedTitle, 250));
-	} else {
-		embed.setTitle(cap(eventTitle, 250));
-	}
+    embed.setTitle(cap(parser.getTitle(event), 250));
 
 	const link = parser.getLink(event);
 	if (link.startsWith("https://") || link.startsWith("http://")) {
@@ -67,16 +61,18 @@ export function createMessage(event) {
 	const fileLocation = parser.getFileLocation(event);
 	const snippet = cap(parser.getErrorCodeSnippet(event), 3900);
 
+    let descriptionText = `> ${event.culprit ? `**${eventLevel.toUpperCase()}**: \`${event.culprit.slice(-95)}\` ${event.environment ? `on ${event.environment}` : ""}\n` : ""}\n`;
+
 	if (snippet) {
-		embed.setDescription(
-			`${fileLocation ? `\`📄 ${fileLocation.slice(-95)}\`\n` : ""}\`\`\`${
+        descriptionText += `${fileLocation ? `\`📄 ${fileLocation.slice(-95)}\`\n` : ""}\`\`\`${
 				parser.getLanguage(event) ?? parser.getPlatform(event)
 			}\n${snippet}
       \`\`\``
-		);
 	} else {
-		embed.setDescription("Unable to generate code snippet.");
+        descriptionText += "Unable to generate code snippet.";
 	}
+
+    embed.setDescription(descriptionText);
 
 	const fields: APIEmbedField[] = [];
 
