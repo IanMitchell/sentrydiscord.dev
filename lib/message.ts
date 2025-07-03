@@ -12,30 +12,7 @@ function cap(str: string, length: number) {
 }
 
 export function createMessage(requestBody) {
-    console.debug("Received new event");
-
     const event = parser.getEvent(requestBody);
-
-    console.debug({
-        event: parser.getEvent(event),
-        platform: parser.getPlatform(event),
-        language: parser.getLanguage(event),
-        contexts: parser.getContexts(event),
-        extras: parser.getExtras(event),
-        link: parser.getLink(event),
-        tags: parser.getTags(event),
-        level: parser.getLevel(event),
-        type: parser.getType(event),
-        title: parser.getTitle(event),
-        time: parser.getTime(event),
-        user: parser.getUser(event),
-        release: parser.getRelease(event),
-        fileLocation: parser.getFileLocation(event),
-        stackTrace: parser.getStacktrace(event),
-        errorLocation: parser.getErrorLocation(event, 7),
-        errorCodeSnippet: parser.getErrorCodeSnippet(event),
-        message: parser.getMessage(event),
-    });
 
     const eventLevel = parser.getLevel(event);
 
@@ -137,29 +114,6 @@ export function createMessage(requestBody) {
 }
 
 export function createLegacyMessage(event) {
-    console.debug("Received legacy event");
-
-    console.debug({
-        event: legacyParser.getEvent(event),
-        project: legacyParser.getProject(event),
-        platform: legacyParser.getPlatform(event),
-        language: legacyParser.getLanguage(event),
-        contexts: legacyParser.getContexts(event),
-        extras: legacyParser.getExtras(event),
-        link: legacyParser.getLink(event),
-        tags: legacyParser.getTags(event),
-        level: legacyParser.getLevel(event),
-        type: legacyParser.getType(event),
-        title: legacyParser.getTitle(event),
-        time: legacyParser.getTime(event),
-        user: legacyParser.getUser(event),
-        release: legacyParser.getRelease(event),
-        fileLocation: legacyParser.getFileLocation(event),
-        stackTrace: legacyParser.getStacktrace(event),
-        errorLocation: legacyParser.getErrorLocation(event, 7),
-        errorCodeSnippet: legacyParser.getErrorCodeSnippet(event),
-        message: legacyParser.getMessage(event),
-    });
 	const embed = new EmbedBuilder()
 		.setColor(getColor(legacyParser.getLevel(event)))
 		.setAuthor({
