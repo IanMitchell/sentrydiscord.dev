@@ -196,17 +196,10 @@ export function getErrorCodeSnippet(event: SentryEvent) {
   if (!location) {
     return event?.culprit ?? null;
   }
-
-  const startingLine = location.lineno - (location.pre_context?.length ?? 0);
   
   return ` ${location.pre_context?.join("\n ") ?? ""}\n>${
     location.context_line
   }\n ${location.post_context?.join("\n ") ?? ""}`;
-
- // TODO: Consider adding line numbers to the code snippet
-  return ` ${location.pre_context?.map((line, index) => `${startingLine - location.pre_context?.length ?? 0 + index} | ${line}`).join("\n ") ?? ""}\n>${location.lineno}>| ${
-      location.context_line
-    }\n${location.post_context?.map((line, index) => `${index + location.lineno + 1} | ${line}`).join("\n ") ?? ""}`;
 }
 
 export function getMessage(event: SentryEvent) {
