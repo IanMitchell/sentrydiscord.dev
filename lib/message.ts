@@ -19,7 +19,7 @@ export function createMessage(requestBody) {
 	const embed = new EmbedBuilder()
 		.setColor(getColor(eventLevel))
 		.setAuthor({
-			name: requestBody.triggered_rule ?? "Sentry Event",
+			name: requestBody?.data?.triggered_rule ?? "Sentry Event",
 			iconURL: "https://sentrydiscord.dev/icons/sentry.png",
 		})
 		.setFooter({
