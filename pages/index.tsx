@@ -266,13 +266,11 @@ export default function Home({ events, webhooks }) {
 										</p>
 									</Question>
 
-									<Question title="Want a native integration?">
-										Me too! There's an{" "}
-										<QuestionExternalLink href="https://github.com/getsentry/sentry/issues/10925">
-											open issue on GitHub
-										</QuestionExternalLink>{" "}
-										that you can go and leave reactions on to help get it
-										prioritized. If official support lands, this service will
+									<Question title="What about the native integration?">
+                                        Unfortunately, the native Sentry integration for Discord is
+                                        only available for paid Sentry plans. This service provides
+                                        a free alternative for everyone! If the native integration
+                                        ever becomes available for free plans, this service will
 										likely stop allowing new registrations but will remain up so
 										long as webhooks are receiving events.
 									</Question>
