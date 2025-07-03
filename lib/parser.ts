@@ -8,7 +8,7 @@ type SentryEvent = {
     platform?: string;
     message?: string,
     datetime?: string;
-    tags?: Record<string, string>;
+    tags?: Array<[string, string]>;
     _metrics?: Record<string, number>;
     _ref?: number;
     _ref_version?: number;
