@@ -123,7 +123,7 @@ export function getExtras(event: SentryEvent) {
 }
 
 export function getLink(event: SentryEvent) {
-    return event?.url ?? "https://sentry.io";
+    return event?.web_url ?? event?.url ?? "https://sentry.io";
 }
 
 export function getTags(event: SentryEvent) {
