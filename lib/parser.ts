@@ -1,5 +1,22 @@
 type SentryIssue = Record<string, any>;
 
+type SentryStacktrace = {
+    frames?: Array<{
+        function?: string;
+        module?: string;
+        filename?: string;
+        abs_path?: string;
+        lineno?: number;
+        pre_context?: Array<string>;
+        context_line?: string;
+        post_context?: Array<string>;
+        in_app?: boolean;
+        vars?: Record<string, any>;
+        colno?: number;
+        data?: Record<string, any>;
+    }>;
+};
+
 type SentryEvent = {
     event_id: string;
     project: string;
@@ -41,34 +58,7 @@ type SentryEvent = {
         api_target?: string;
         cookies?: Record<string, string>;
     };
-    stacktrace?: {
-        frames?: Array<{
-            function?: string,
-            module?: string,
-            filename?: string,
-            abs_path?: string,
-            lineno?: number,
-            pre_context?: Array<string>,
-            context_line?: string,
-            post_context?: Array<string>,
-            in_app?: boolean,
-            vars?: Record<string, any>,
-            colno?: number,
-            data?: Record<string, any>,
-            errors?: Array<string>,
-            raw_function?: string,
-            image_addr?: string,
-            instruction_addr?: string,
-            addr_mode?: string,
-            package?: string,
-            platform?: string,
-            source_link?: string,
-            symbol?: string,
-            symbol_addr?: string,
-            trust?: boolean,
-            lock?: boolean,
-        }>;
-    };
+    stacktrace?: SentryStacktrace;
     timestamp?: number;
     title?: string;
     type?: string;
@@ -89,6 +79,19 @@ type SentryEvent = {
     web_url?: string;
     issue_url?: string;
     issue_id?: string;
+    exception?: {
+        values: Array<{
+            type?: string;
+            value?: string;
+            module?: string;
+            mechanism?: {
+                type?: string;
+                handled?: boolean;
+                data?: Record<string, any>;
+            };
+            stacktrace?: SentryStacktrace;
+        }>;
+    }
 };
 
 
@@ -164,7 +167,7 @@ export function getFileLocation(event: SentryEvent) {
 
 export function getStacktrace(event: SentryEvent) {
   return (
-    event?.stacktrace || {
+    event?.stacktrace || event?.exception?.values?.[0]?.stacktrace || {
         frames: [],
     }
   );
