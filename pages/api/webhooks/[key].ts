@@ -1,7 +1,7 @@
 import prisma from '../../../lib/database';
 import nextConnect from 'next-connect';
 import { getPlatform } from '../../../lib/parser';
-import createMessage from '../../../lib/message';
+import { createMessage, createLegacyMessage } from '../../../lib/message';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (request: NextApiRequest, response: NextApiResponse) => {
@@ -10,15 +10,26 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
   try {
     let { key, thread_id: threadId } = request.query;
 
+    // Legacy Integrations do not have a 'sentry-hook-resource' key.
+    // Therefore, we can differentiate between legacy and new integrations with this.
+    const sentryHookResource = request.headers['sentry-hook-resource'];
+
+    if (sentryHookResource && sentryHookResource !== 'event_alert') {
+        // This probably needs to be discussed. 
+        console.log(`Received ${sentryHookResource} event for ${key}, ignoring.`);
+        if (process.env.NODE_ENV === 'development' || request.query.debug) {
+          console.log({ body: request.body, headers: request.headers });
+        }
+        return response.status(204);
+    }
+
     if (Array.isArray(key)) {
       key = key[0];
     }
 
+    console.log(`Received event for ${key}`);
     if (process.env.NODE_ENV === 'development' || request.query.debug) {
-      console.log(`Received event for ${key}`);
-      console.log({ body: request.body });
-    } else {
-      console.log(`Received event for ${key}`);
+      console.log({ body: request.body, headers: request.headers });
     }
 
     if (request.body == null) {
@@ -38,7 +49,9 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
       return response.status(404);
     }
 
-    message = createMessage(request.body);
+    message = (
+        sentryHookResource ? createMessage(request.body) : createLegacyMessage(request.body)
+    )
     console.log('Constructed embed');
     console.log({ key });
 
