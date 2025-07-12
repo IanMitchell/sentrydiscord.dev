@@ -1,123 +1,33 @@
 type SentryIssue = Record<string, any>;
 
-type SentryStacktrace = {
-    frames?: Array<{
-        function?: string;
-        module?: string;
-        filename?: string;
-        abs_path?: string;
-        lineno?: number;
-        pre_context?: Array<string>;
-        context_line?: string;
-        post_context?: Array<string>;
-        in_app?: boolean;
-        vars?: Record<string, any>;
-        colno?: number;
-        data?: Record<string, any>;
-    }>;
-};
-
-type SentryEvent = {
-    event_id: string;
-    project: string;
-    release?: string;
-    dist?: string,
-    platform?: string;
-    message?: string,
-    datetime?: string;
-    tags?: Array<[string, string]>;
-    _metrics?: Record<string, number>;
-    _ref?: number;
-    _ref_version?: number;
-    contexts?: Record<string, any>;
-    culprit?: string;
-    environment?: string;
-    extra?: Record<string, any>;
-    fingerprint?: Array<string>;
-    grouping_config?: Record<string, any>;
-    hashes?: Array<string>;
-    level?: string;
-    location?: string;
-    logentry?: {
-        formatted?: string;
-        message?: string;
-        params?: Array<string>;
-    };
-    logger?: string;
-    metadata?: Record<string, any>;
-    modules?: Record<string, string>;
-    nodestore_insert?: number;
-    received?: number;
-    request?: {
-        url?: string;
-        method?: string;
-        headers?: Record<string, string>;
-        data?: string;
-        env?: Record<string, string>;
-        inferred_content_type?: string;
-        api_target?: string;
-        cookies?: Record<string, string>;
-    };
-    stacktrace?: SentryStacktrace;
-    timestamp?: number;
-    title?: string;
-    type?: string;
-    user?: {
-        id?: string;
-        email?: string;
-        ip_address?: string;
-        username?: string;
-        name?: string;
-        geo?: {
-            country_code?: string;
-            region?: string;
-            city?: string;
-        };
-    };
-    version?: string;
-    url?: string;
-    web_url?: string;
-    issue_url?: string;
-    issue_id?: string;
-    exception?: {
-        values: Array<{
-            type?: string;
-            value?: string;
-            module?: string;
-            mechanism?: {
-                type?: string;
-                handled?: boolean;
-                data?: Record<string, any>;
-            };
-            stacktrace?: SentryStacktrace;
-        }>;
-    }
-};
-
-
-export function getEvent(issue: SentryIssue): SentryEvent {
-  return issue?.data?.event ?? issue;
+export function getEvent(issue: SentryIssue) {
+  return issue?.event ?? issue?.data?.issue ?? issue;
 }
 
-export function getPlatform(event: SentryEvent) {
-    return event?.platform || "unknown";
+export function getProject(issue: SentryIssue) {
+  return issue?.project?.project_name ?? getEvent(issue)?.project?.name;
 }
 
-export function getLanguage(event: SentryEvent) {
-    return event?.location?.split(".")?.slice(-1)?.[0] || "";
+export function getPlatform(issue: SentryIssue) {
+  return getEvent(issue)?.platform;
 }
 
-export function getContexts(event: SentryEvent) {
-    const contexts = getEvent(event)?.contexts ?? {};
-    const values = Object.values(contexts)
-        .map((value: Record<string, unknown>) => `${value?.name} ${value?.version}`)
-        .filter((value) => value !== "undefined undefined");
+export function getLanguage(issue: SentryIssue) {
+  return getEvent(issue)?.location?.split(".")?.slice(-1)?.[0] || "";
+}
+
+export function getContexts(issue: SentryIssue) {
+  const contexts = getEvent(issue)?.contexts ?? {};
+  const values = Object.values(contexts)
+    .map((value: Record<string, unknown>) => `${value?.name} ${value?.version}`)
+    // TODO: Have a better decision tree here
+    .filter((value) => value !== "undefined undefined");
 
   return values ?? [];
 }
 
-export function getExtras(event: SentryEvent) {
-  const extras = event?.extra ?? {};
+export function getExtras(issue: SentryIssue) {
+  const extras = getEvent(issue)?.extra ?? {};
   const values = Object.entries(extras).map(
     ([key, value]) => `${key}: ${value}`
   );
@@ -125,56 +35,65 @@ export function getExtras(event: SentryEvent) {
   return values ?? [];
 }
 
-export function getLink(event: SentryEvent) {
-    return event?.web_url ?? event?.url ?? "https://sentry.io";
+export function getLink(issue: SentryIssue) {
+  return issue?.url ?? "https://sentry.io";
 }
 
-export function getTags(event: SentryEvent) {
-  return event?.tags ?? [];
+export function getTags(issue: SentryIssue) {
+  return getEvent(issue)?.tags ?? [];
 }
 
-export function getLevel(event: SentryEvent) {
-  return event?.level;
+export function getLevel(issue: SentryIssue) {
+  return getEvent(issue)?.level;
 }
 
-export function getType(event: SentryEvent) {
-  return event?.type;
+export function getType(issue: SentryIssue) {
+  return getEvent(issue)?.type;
 }
 
-export function getTitle(event: SentryEvent) {
-  return event?.title ?? "Sentry Event";
+export function getTitle(issue: SentryIssue) {
+  return getEvent(issue)?.title ?? "Sentry Event";
 }
 
-export function getTime(event: SentryEvent) {
+export function getTime(issue: SentryIssue) {
+  const event = getEvent(issue);
+
   if (event?.timestamp) {
-    return new Date(event?.timestamp * 1000);
+    return new Date(getEvent(issue)?.timestamp * 1000);
+  }
+
+  if (event?.lastSeen != null) {
+    return new Date(event?.lastSeen);
+  }
+
+  if (event?.firstSeen != null) {
+    return new Date(event?.firstSeen);
   }
 
   return new Date();
 }
 
-export function getRelease(event: SentryEvent) {
-  return event?.release;
+export function getRelease(issue: SentryIssue) {
+  return getEvent(issue)?.release;
 }
 
-export function getUser(event: SentryEvent) {
-  return event?.user;
+export function getUser(issue: SentryIssue) {
+  return getEvent(issue)?.user;
 }
 
-export function getFileLocation(event: SentryEvent) {
-  return event?.location;
+export function getFileLocation(issue: SentryIssue) {
+  return getEvent(issue)?.location;
 }
 
-export function getStacktrace(event: SentryEvent) {
+export function getStacktrace(issue: SentryIssue) {
   return (
-    event?.stacktrace || event?.exception?.values?.[0]?.stacktrace || {
-        frames: [],
-    }
+    getEvent(issue)?.stacktrace ??
+    getEvent(issue)?.exception?.values[0]?.stacktrace
   );
 }
 
-export function getErrorLocation(event: SentryEvent, maxLines = Infinity) {
-  const stacktrace = getStacktrace(event);
+export function getErrorLocation(issue: SentryIssue, maxLines = Infinity) {
+  const stacktrace = getStacktrace(issue);
   const locations = stacktrace?.frames; /*.reverse();*/
 
   let files = locations?.map(
@@ -192,19 +111,22 @@ export function getErrorLocation(event: SentryEvent, maxLines = Infinity) {
   return files;
 }
 
-export function getErrorCodeSnippet(event: SentryEvent) {
-  const stacktrace = getStacktrace(event);
+export function getErrorCodeSnippet(issue: SentryIssue) {
+  const stacktrace = getStacktrace(issue);
   const location = stacktrace?.frames?.reverse()?.[0];
 
   if (!location) {
+    const event = getEvent(issue);
     return event?.culprit ?? null;
   }
-  
+
+  // The spaces below are intentional - they help align the code
+  // aorund the additional `>` marker
   return ` ${location.pre_context?.join("\n ") ?? ""}\n>${
     location.context_line
-  }\n ${location.post_context?.join("\n ") ?? ""}`;
+  }\n${location.post_context?.join("\n") ?? ""}`;
 }
 
-export function getMessage(event: SentryEvent) {
-  return event?.message;
+export function getMessage(issue: SentryIssue) {
+  return issue?.message;
 }

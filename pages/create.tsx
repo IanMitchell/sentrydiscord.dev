@@ -212,24 +212,15 @@ export default function Create() {
               <h2 className="text-center text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                 Finally, add the Webhook Integration to Sentry
               </h2>
-              <ul className="mt-4 max-w-3xl mx-auto text-xl text-gray-500 space-y-2">
-                <li>
-                  Create a new integration by going to <strong>Settings</strong> &rarr; <strong>Custom Integrations</strong> &rarr; <strong>Create New Integration</strong>, and selecting <strong>Internal Integration</strong>.
-                </li>
-                <li>
-                  Paste the above link into the <strong>Webhook URL</strong> field and enable <strong>Alert Rule Action</strong>.
-                </li>
-                <li>
-                  Go to <strong>Alerts</strong> &rarr; <strong>Create Alert</strong> and set up a new rule to <strong>Send a notification via an integration</strong>, and choose the integration you just created.
-                </li>
-              </ul>
-              <p className="mt-4 max-w-lg mx-auto text-center text-xl text-gray-500">
-                Confused? Check out the demo below for a walkthrough!
+              <p className="mt-4 max-w-3xl mx-auto text-center text-xl text-gray-500">
+                You can find it under <strong>Settings</strong> &rarr;{' '}
+                <strong>Integrations</strong> &rarr; <strong>Webhooks</strong>.
+                Add it to your project, and then in the{' '}
+                <strong>Configure</strong> screen add the above link to the{' '}
+                <strong>Callback URLs</strong>. That's it! Save your changes,
+                and click "Test plugin" to see it in action.
               </p>
-              <div className="mt-8 relative h-0 w-full pb-[480px]">
-                <iframe loading="lazy" allowFullScreen={true} allow="fullscreen;" className="absolute w-full h-full top-0 left-0" src="https://demo.arcade.software/v7uhzmdV6Q5PDzoVPAE6?embed" />
-              </div>
-              <p className="mt-8 max-w-3xl mx-auto text-center text-xl text-gray-500">
+              <p className="mt-4 max-w-3xl mx-auto text-center text-xl text-gray-500">
                 If you would like to target a specific thread on Discord, you
                 can add <strong>?thread_id=123</strong> to the URL you paste
                 into Sentry (replacing 123 with the thread ID).
