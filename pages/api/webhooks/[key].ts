@@ -1,8 +1,8 @@
-import prisma from '../../../lib/database';
-import nextConnect from 'next-connect';
-import { getPlatform } from '../../../lib/parser';
-import { createMessage, createLegacyMessage } from '../../../lib/message';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import nextConnect from 'next-connect';
+import prisma from '../../../lib/database';
+import { createLegacyMessage, createMessage } from '../../../lib/message';
+import { getPlatform } from '../../../lib/parser';
 
 const handler = async (request: NextApiRequest, response: NextApiResponse) => {
   let message;
@@ -15,8 +15,9 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
     const sentryHookResource = request.headers['sentry-hook-resource'];
 
     if (sentryHookResource && sentryHookResource !== 'event_alert') {
-        // This probably needs to be discussed. 
+        // This probably needs to be discussed.
         console.log(`Received ${sentryHookResource} event for ${key}, ignoring.`);
+        console.log({ value: request.headers['sentry-hook-resource'], headers: request.headers })
         if (process.env.NODE_ENV === 'development' || request.query.debug) {
           console.log({ body: request.body, headers: request.headers });
         }
